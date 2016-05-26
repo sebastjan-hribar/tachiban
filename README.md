@@ -1,13 +1,12 @@
 # Tachiban
 
-Tachiban provides simple password hashing for user authentication with bcrypt.
-The module provides methods for generating password hash and salt, password reset sent time and
-a token in a form of random URL-safe base64 string to use for password reset links. It also provides
-a method for user authentication.
+Tachiban provides simple authentication system with bcrypt.
+It provides methods for generating password hash and salt, password reset sent time and
+a token in a form of random URL-safe base64 string, to use for creating a password reset link. It also provides a method for user authentication.
 
 The Tachiban code was extracted from a Hanami based web app using Hanami::Model and was also used in a Camping based web app using Active Record.
 
-Though derived from a Hanami web app, Tachiban is currently not bound to Hanami.
+Tachiban is currently not bound to Hanami.
 
 ## Installation
 
@@ -25,9 +24,16 @@ Or install it yourself as:
 
     $ gem install tachiban
 
-## Usage
+And include it in you application:
 
-Suppose we have a user model for which we want to provide password authentication.
+```ruby
+include Tachiban
+```
+
+
+## Usage
+Tachiban supports creating a user's `password_hash` and `salt` to be then stored in the database. To authenticate a user, the user has to be found in the database first and then the `authenticated?` method compares the user's `password_hash` from the database with the `password_hash` that is generated at the time of the authentication. For this purpose the password from the user's input and user's salt from the database is used.
+
 
 #### Example:
 __model__: User
@@ -35,37 +41,39 @@ __model__: User
 __attributes__: name, surname, email, password_hash, password_salt,
                 password_confirmation, password_reset_token, password_reset_sent_at
 
-1. User creation
+##### Methods:
 
 
-* generate password salt
+To generate password salt
 
 ```ruby
 generate_pass_salt
 ```
 
-* generate password hash
+To generate password hash
 
 ```ruby
 generate_pass_hash(password, salt)
 ```
 
-
-2. User authentication
+To authenticate the user
 
 ```ruby
 authenticated?(user_pass_hash, user_salt, input_pass)
 ```
 
-3. Password reset setup
+To set the password reset sent time
 
 ```ruby
 password_reset_sent_at
+```
+
+To generate a random url token
+```ruby
 token
 ```
 
-
-### Specific for Hanami
+#### Specific for Hanami
 
 ## Development
 
