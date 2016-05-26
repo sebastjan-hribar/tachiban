@@ -21,7 +21,7 @@ describe "Signup" do
   end
 end
 
-describe "Authentication" do
+describe "Login" do
   class Login
     include Hanami::Action
     include Hanami::Action::Session
@@ -61,6 +61,10 @@ describe "Authentication" do
   end
 
  end
+
+describe "Authentication" do
+  #Write test for authentication
+end
 
 describe "Password reset" do
 

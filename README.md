@@ -1,12 +1,16 @@
 # Tachiban
 
-Tachiban provides simple authentication system with bcrypt.
-It provides methods for generating password hash and salt, password reset sent time and
-a token in a form of random URL-safe base64 string, to use for creating a password reset link. It also provides a method for user authentication.
+Tachiban provides simple authentication system with the power of bcrypt and
+offers the following functionalities (with methods listed below
+  under Methods by features):
+- Signup
+- Login
+- Authentication
+- Password reset
 
-The Tachiban code was extracted from a Hanami based web app using Hanami::Model and was also used in a Camping based web app using Active Record.
+The Tachiban code was extracted from a Hanami based web app using
+Hanami::Model and was also used in a Camping based web app using Active Record.
 
-Tachiban is currently not bound to Hanami.
 
 ## Installation
 
@@ -32,38 +36,44 @@ include Tachiban
 
 
 ## Usage
-Tachiban supports creating a user's `password_hash` and `salt` to be then stored in the database. To authenticate a user, the user has to be found in the database first and then the `authenticated?` method compares the user's `password_hash` from the database with the `password_hash` that is generated at the time of the authentication. For this purpose the password from the user's input and user's salt from the database is used.
 
+#### Methods by features:
 
-#### Example:
-__model__: User
-
-__attributes__: name, surname, email, password_hash, password_salt,
-                password_confirmation, password_reset_token, password_reset_sent_at
-
-##### Methods:
-
-
+##### Signup
 To generate password salt
 
 ```ruby
-generate_pass_salt
+generate_salt
 ```
 
 To generate password hash
 
 ```ruby
-generate_pass_hash(password, salt)
+password_hash(password, salt)
 ```
-
-To authenticate the user
+##### Login
+To check the user's credentials
 
 ```ruby
-authenticated?(user_pass_hash, user_salt, input_pass)
+authenticated?(user, user_pass_hash, user_salt, input_pass)
 ```
 
-To set the password reset sent time
+To login the authenticated user and set the user object
+ as `session[:current_user]`
 
+```ruby
+login(user)
+```
+##### Authentication
+To check whether the user is loggen in
+```ruby
+check_for_logged_in_user
+```
+
+
+
+##### Password reset
+To set the password reset sent time
 ```ruby
 password_reset_sent_at
 ```
@@ -73,7 +83,9 @@ To generate a random url token
 token
 ```
 
-#### Specific for Hanami
+### ToDo
+1. Write test for authentication (check_for_logged_in_user)
+2. Setup default title and body for password reset e-mail.
 
 ## Development
 
