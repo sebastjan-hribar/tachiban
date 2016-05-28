@@ -94,6 +94,7 @@ token
 ### ToDo
 1. Write test for authentication (check_for_logged_in_user)
 2. Setup default title and body for password reset e-mail.
+3. Include level based authorization checking.
 
 ## Development
 

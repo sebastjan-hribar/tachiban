@@ -3,7 +3,7 @@ require 'bcrypt'
 
 module Tachiban
 
-# ###Signup methods###
+# ### Signup methods ###
 # The generate_salt method generates salt to be used in generating
 # hash_secret. Salt should be stored in the database so it can be retrieved
 # during the login process.
@@ -20,7 +20,7 @@ module Tachiban
     BCrypt::Engine.hash_secret(password, salt)
   end
 
-# ###Login methods###
+# ### Login methods ###
 # The authenticated? method returns true if the the following criteria
 # are true:
 # - user, passed in the method
@@ -41,7 +41,7 @@ module Tachiban
     session[:current_user] = user
   end
 
-# ###Authentication methods###
+# ### Authentication methods ###
 # The check_for_logged_in_user method can be used to check for each
 # request whether the user is logged in.
 
@@ -51,7 +51,7 @@ module Tachiban
     #end
   end
 
-  # ###Password reset methods###
+# ### Password reset methods ###
 # The password_reset_sent_at method provides the timestamp of when
 # the password has been sent. This can later be used to define the
 # password reset link expiration time.
