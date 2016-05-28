@@ -1,6 +1,6 @@
 # Tachiban
 
-Tachiban provides simple authentication system with the power of bcrypt and
+Tachiban (立ち番 - standing watch) provides simple authentication system with the power of bcrypt and
 offers the following functionalities (with methods listed below
   under Methods by features):
 - Signup
