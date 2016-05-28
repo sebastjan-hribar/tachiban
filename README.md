@@ -33,7 +33,15 @@ And include it in you application:
 ```ruby
 include Tachiban
 ```
+For Hanami based apps include it in the controller
+prepare block in the `application.rb`:
 
+```ruby
+controller.prepare do
+  #...
+  include Tachiban
+end
+```
 
 ## Usage
 
@@ -65,7 +73,7 @@ To login the authenticated user and set the user object
 login(user)
 ```
 ##### Authentication
-To check whether the user is loggen in
+To check whether the user is logged in
 ```ruby
 check_for_logged_in_user
 ```
