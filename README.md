@@ -12,9 +12,9 @@ The Tachiban code was extracted from a Hanami based web app using
 Hanami::Model and was also used in a Camping based web app using Active Record.
 
 
-## Installation
+<!--## Installation
 
-Add this line to your application's Gemfile:
+ Add this line to your application's Gemfile:
 
 ```ruby
 gem 'tachiban'
@@ -41,7 +41,7 @@ controller.prepare do
   #...
   include Tachiban
 end
-```
+``` -->
 
 ## Usage
 
@@ -92,8 +92,9 @@ token
 ```
 
 ### ToDo
-1. Write test for authentication (check_for_logged_in_user)
+1. Test the authentication method (check_for_logged_in_user).
 2. Setup default title and body for password reset e-mail.
+3. Implement redirect instead of halt.
 3. Include level based authorization checking.
 
 ## Development
