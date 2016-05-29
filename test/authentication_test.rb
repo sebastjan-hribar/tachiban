@@ -25,7 +25,7 @@ class Login
   end
 end
 
-class Test
+class AuthTest
   include Hanami::Action
   include Hanami::Action::Session
 
@@ -34,6 +34,7 @@ class Test
     @test_user = User.new(id: 1, name: "Tester",
     pass_hash: @existing_user_password_hash,
     pass_salt: @existing_user_salt)
+    login(@test_user)
   end
 end
 
