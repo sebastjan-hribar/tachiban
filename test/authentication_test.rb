@@ -8,6 +8,34 @@ require 'hanami/model'
 require_relative "../lib/tachiban"
 include Tachiban
 
+class User
+  include Hanami::Entity
+  attributes :id, :name, :pass_hash, :pass_salt
+end
+
+class Login
+  include Hanami::Action
+  include Hanami::Action::Session
+
+  def call(params)
+    @test_user = User.new(id: 1, name: "Tester",
+    pass_hash: @existing_user_password_hash,
+    pass_salt: @existing_user_salt)
+    login(@test_user)
+  end
+end
+
+class Test
+  include Hanami::Action
+  include Hanami::Action::Session
+
+  def call(params)
+    check_for_logged_in_user
+    @test_user = User.new(id: 1, name: "Tester",
+    pass_hash: @existing_user_password_hash,
+    pass_salt: @existing_user_salt)
+  end
+end
 
 describe "Signup" do
 
@@ -22,21 +50,6 @@ describe "Signup" do
 end
 
 describe "Login" do
-  class Login
-    include Hanami::Action
-    include Hanami::Action::Session
-
-    def call(params)
-      @test_user = User.new(id: 1, name: "Tester",
-    pass_hash: @existing_user_password_hash, pass_salt: @existing_user_salt)
-      login(@test_user)
-    end
-  end
-
-  class User
-    include Hanami::Entity
-    attributes :id, :name, :pass_hash, :pass_salt
-  end
 
   before do
     @existing_user_salt = generate_salt
@@ -44,7 +57,6 @@ describe "Login" do
     @test_user = User.new(id: 1, name: "Tester",
     pass_hash: @existing_user_password_hash, pass_salt: @existing_user_salt)
   end
-
 
   it "successful authentication" do
     assert authenticated?(@test_user, @test_user.pass_hash, @test_user.pass_salt, "123") == true, "User is authenticated"
@@ -63,7 +75,13 @@ describe "Login" do
  end
 
 describe "Authentication" do
-  #Write test for authentication
+
+  it 'wont let unauthenticated user pass' do
+    action = Test.new
+    action.call({})
+    action.session[:current_user].must_be_nil
+  end
+
 end
 
 describe "Password reset" do
