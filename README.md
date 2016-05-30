@@ -1,5 +1,7 @@
 # Tachiban
 
+[![Join the chat at https://gitter.im/sebastjan-hribar/tachiban](https://badges.gitter.im/sebastjan-hribar/tachiban.svg)](https://gitter.im/sebastjan-hribar/tachiban?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Tachiban (立ち番 - standing watch) provides simple authentication system by using bcrypt for password hashing and
 offers the following functionalities (with methods listed below
   under Methods by features):
