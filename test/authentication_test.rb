@@ -1,16 +1,13 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'minitest/pride'
-require 'hanami/controller'
-require 'hanami/action/session'
-require 'hanami/model'
 
 require_relative "../lib/tachiban"
-include Tachiban
+include Hanami::Tachiban
 
 class User
   include Hanami::Entity
-  attributes :id, :name, :pass_hash, :pass_salt
+  attributes :id, :name, :hashed_pass
 end
 
 class Login
@@ -18,10 +15,9 @@ class Login
   include Hanami::Action::Session
 
   def call(params)
-    @test_user = User.new(id: 1, name: "Tester",
-    pass_hash: @existing_user_password_hash,
-    pass_salt: @existing_user_salt)
-    login(@test_user)
+    @user = User.new(id: 1, name: "Tester",
+    hashed_pass: hashed_password("pass123"))
+    login(@user)
   end
 end
 
@@ -31,40 +27,33 @@ class AuthTest
 
   def call(params)
     check_for_logged_in_user
-    @test_user = User.new(id: 1, name: "Tester",
-    pass_hash: @existing_user_password_hash,
-    pass_salt: @existing_user_salt)
-    login(@test_user)
+    @user = User.new(id: 1, name: "Tester",
+    hashed_pass: hashed_password("pass123"))
+    login(@user)
   end
 end
 
 describe "Signup" do
 
-  it 'generates salt' do
-    generate_salt.must_be_kind_of String
-  end
-
-  it 'generates password hash' do
-    salt = generate_salt
-    password_hash("pass123", salt).must_be_kind_of String
+  it 'generates hashed password' do
+    password = hashed_password("pass123")
+    password.must_be_kind_of String
   end
 end
 
 describe "Login" do
 
   before do
-    @existing_user_salt = generate_salt
-    @existing_user_password_hash = password_hash("123", @existing_user_salt)
-    @test_user = User.new(id: 1, name: "Tester",
-    pass_hash: @existing_user_password_hash, pass_salt: @existing_user_salt)
+    @user = User.new(id: 1, name: "Tester",
+    hashed_pass: hashed_password("123"))
   end
 
   it "successful authentication" do
-    assert authenticated?(@test_user, @test_user.pass_hash, @test_user.pass_salt, "123") == true, "User is authenticated"
+    assert authenticated?(@user, @user.hashed_pass, "123") == true, "User is authenticated"
   end
 
   it "unsuccessful authentication" do
-    assert authenticated?(@test_user, @test_user.pass_hash, @test_user.pass_salt, "1231") == false, "User is not authenticated"
+    assert authenticated?(@user, @user.hashed_pass, "1231") == false, "User is not authenticated"
   end
 
   it "logs the user in" do
@@ -78,7 +67,7 @@ describe "Login" do
 describe "Authentication" do
 
   it 'wont let unauthenticated user pass' do
-    action = Test.new
+    action = AuthTest.new
     action.call({})
     action.session[:current_user].must_be_nil
   end
