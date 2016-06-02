@@ -50,22 +50,16 @@ end
 #### Methods by features:
 
 ##### Signup
-To generate password salt
+To generate hashed password
 
 ```ruby
-generate_salt
-```
-
-To generate password hash
-
-```ruby
-password_hash(password, salt)
+hashed_password(password)
 ```
 ##### Login
 To check the user's credentials
 
 ```ruby
-authenticated?(user, user_pass_hash, user_salt, input_pass)
+authenticated?(user, user_hashed_pass, input_pass)
 ```
 
 To login the authenticated user and set the user object
@@ -95,8 +89,7 @@ token
 
 ### ToDo
 1. Setup default title and body for password reset e-mail.
-2. Implement redirect instead of halt.
-3. Include level based authorization checking.
+2. Include level based authorization checking.
 
 <!-- ## Development
 

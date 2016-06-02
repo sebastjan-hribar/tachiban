@@ -41,7 +41,8 @@ module Hanami
 
   # ### Authentication methods ###
   # The check_for_logged_in_user method can be used to check for each
-  # request whether the user is logged in.
+  # request whether the user is logged in. If user is not loggen in
+  # they are redirected to "/".
 
     def check_for_logged_in_user
       #unless ENV['HANAMI_ENV'] == 'test'
