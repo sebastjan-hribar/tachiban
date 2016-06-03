@@ -37,7 +37,7 @@ describe "Login" do
       assert @action.authenticated?("1231") == false, "User is not authenticated"
     end
 
-    it "logs the user in" do
+    it "saves the user to the session" do
       @action.session[:current_user].name.must_equal "Tester"
     end
 
@@ -46,11 +46,9 @@ describe "Login" do
   describe "without user" do
     before { @action.call({}) }
 
-    it 'wont let unauthenticated user pass' do
+    it 'session wont have user' do
       @action.session[:current_user].must_be_nil
     end
   end
-
-
 
 end

@@ -59,14 +59,14 @@ hashed_password(password)
 To check the user's credentials
 
 ```ruby
-authenticated?(user, user_hashed_pass, input_pass)
+authenticated?(input_pass)
 ```
 
 To login the authenticated user and set the user object
  as `session[:current_user]`
 
 ```ruby
-login(user)
+login
 ```
 ##### Authentication
 To check whether the user is logged in
