@@ -35,7 +35,7 @@ module Hanami
   # Example:
   # login(user) if authenticated?
 
-    def login(user)
+    def login
       session[:current_user] = @user
     end
 

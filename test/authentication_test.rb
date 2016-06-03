@@ -12,7 +12,7 @@ class Login
 
   def call(params)
     @user = params[:user]
-    login(@user)
+    login
   end
 end
 
