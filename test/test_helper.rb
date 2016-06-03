@@ -3,3 +3,5 @@ require 'tachiban'
 require 'hanami/controller'
 
 require 'minitest/autorun'
+require 'minitest/spec'
+require 'minitest/pride'
