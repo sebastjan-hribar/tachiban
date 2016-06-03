@@ -25,8 +25,8 @@ module Hanami
   # - user's hashed password from the database matches the input password
 
 
-    def authenticated?(user, user_hashed_pass, input_pass)
-      user && BCrypt::Password.new(user_hashed_pass) == input_pass
+    def authenticated?(input_pass)
+      @user && BCrypt::Password.new(@user.hashed_pass) == input_pass
     end
 
   # The login method is to be used in combination with authenticated? method to
@@ -36,7 +36,7 @@ module Hanami
   # login(user) if authenticated?
 
     def login(user)
-      session[:current_user] = user
+      session[:current_user] = @user
     end
 
   # ### Authentication methods ###
@@ -69,7 +69,7 @@ module Hanami
 end
 
 ::Hanami::Controller.configure do
- prepare do
-   include Hanami::Tachiban
- end
+  prepare do
+    include Hanami::Tachiban
+  end
 end
