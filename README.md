@@ -49,7 +49,7 @@ end
 
 #### Prerequisites
 The entity for which authentication is used has to have the attribute
-of `hahsed_pass` which holds the generated hashed password.
+of `hashed_pass` which holds the generated hashed password.
 
 Prior to authenticating or logging in the entity, it has to be found
 in the database.
