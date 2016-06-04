@@ -47,6 +47,25 @@ end
 
 ## Usage
 
+#### Prerequisites
+The entity for which authentication is used has to have the attribute
+of `hahsed_pass` which holds the generated hashed password.
+
+Prior to authenticating or logging in the entity, it has to be found
+in the database.
+
+Example:
+
+```ruby
+# In the create action for an entity session
+email = params[:entity_session][:email]
+password = params[:entity_session][:password]
+
+@user = EntityRepository.find_by_email(email)
+login if authenticated?(input_pass)
+```
+
+
 #### Methods by features:
 
 ##### Signup

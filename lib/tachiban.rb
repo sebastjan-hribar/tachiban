@@ -33,7 +33,7 @@ module Hanami
   # log the user in if the authenticated? method returns true. The user is
   # logged in by setting the user object as the session[:current_user].
   # Example:
-  # login if authenticated?
+  # login if authenticated?(input_pass)
 
     def login
       session[:current_user] = @user
