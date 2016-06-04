@@ -62,7 +62,7 @@ email = params[:entity_session][:email]
 password = params[:entity_session][:password]
 
 @user = EntityRepository.find_by_email(email)
-login if authenticated?(input_pass)
+login if authenticated?(password)
 ```
 
 
