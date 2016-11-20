@@ -7,7 +7,7 @@ require 'hanami/model'
 module Hanami
   module Tachiban
 
-    #private
+  
   # ### Signup methods ###
   # The hashed_password method generates a hashed version of the user's
   # password. By default it includes a salt and the default cost factor
@@ -65,6 +65,31 @@ module Hanami
     def token
       SecureRandom.urlsafe_base64
     end
+
+  # The email_body method provides basic message of the password reset
+  # email. The method accepts the url part of the reset link and the token as
+  # arguments.
+  #
+  # URL example: "http://localhost:2300/passwordupdate/"
+
+    def email_body(url, token)
+      "Click the link to reset your password: #{url}#{token}."
+    end
+
+  # The email subject method provides the subject for the password reset email
+  # and takes the application name as an argument to form the subject.
+  #
+  # Example: "Some application - password reset link" or "Password reset link"
+
+    def subject(app_name = "")
+      name = app_name
+      if name == ""
+        return "Password reset"
+      else
+        return "#{name} - password reset link"
+      end
+    end
+
   end
 end
 
