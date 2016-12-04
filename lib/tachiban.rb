@@ -92,6 +92,11 @@ module Hanami
 
 
     # ### Authorization methods ###
+    # The generate_policy method creates the policy file for specified
+    # controller. By default all actions to check against are commented out.
+    # Uncomment the needed actions and define appropriate user role.
+    #
+    # The file is created only if it doesn't exist already.
     def generate_policy(controller_name)
       controller = controller_name.downcase.capitalize
       policy_txt = <<-TXT
@@ -107,42 +112,48 @@ module Hanami
           # appropriate user role.
 
           def new?
-            @role == 'normal_user' && @permissions.include("1")
+            @role == 'normal_user' && @permissions.include?(1)
           end
 
           #def create?
-          #  @role == 'user_role' && @permissions.include("2")
+          #  @role == 'user_role' && @permissions.include?("2")
           #end
 
           #def show?
-          #  @role == 'user_role' && @permissions.include("3")
+          #  @role == 'user_role' && @permissions.include?("3")
           #end
 
           #def index?
-          #  @role == 'user_role' && @permissions.include("4")
+          #  @role == 'user_role' && @permissions.include?("4")
           #end
 
           #def edit?
-          #  @role == 'user_role' && @permissions.include("5")
+          #  @role == 'user_role' && @permissions.include?("5")
           #end
 
           #def update?
-          #  @role == 'user_role' && @permissions.include("6")
+          #  @role == 'user_role' && @permissions.include?("6")
           #end
 
           #def destroy?
-          #  @role == 'user_role' && @permissions.include("7")
+          #  @role == 'user_role' && @permissions.include?("7")
           #end
         end
 
 
         TXT
-
-      File.open("#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
+      unless File.file?("#{controller}Policy.rb")
+        File.open("#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
+      end
     end
 
-    def authorized?(role, permissions)
-      Object.const_get(controller_name + "Policy").new(role, permissions).send(params[:action] + '?')
+    # The authorized? method checks if the specified user has the required role
+    # and permission to access the action. It returns true or false and
+    # provides the basis for further actions in either case.
+    #
+    # Example: redirect_to "/" unless authorized?
+    def authorized?
+      Object.const_get(@controller_name + "Policy").new(@role, @permissions).send("#{@action_name.downcase}?")
     end
 
   end
