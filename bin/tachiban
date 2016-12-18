@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require 'tachiban'
+require 'optparse'
+require_relative '../lib/tachiban/policy_generator.rb'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "\nHanami authorization policy generator
+Usage: ./tachiban -p task
+Flags:
+\n"
+
+  opts.on("-p", "--policy POLICY", "Generate specified policy") do |p|
+    options[:policy] = p
+  end
+
+  opts.on("-h", "--help", "Displays help") do
+    puts opts
+    exit
+  end
+
+end.parse!
+
+puts "Add flag -h or --help to see usage instructions." if options.empty?
+generate_policy("#{options[:policy]}") if options[:policy]
