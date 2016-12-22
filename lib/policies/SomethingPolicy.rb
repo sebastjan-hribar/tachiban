@@ -1,4 +1,4 @@
-    class TaskPolicy
+    class SomethingPolicy
       attr_reader :role, :permissions
 
       def initialize(role, permissions)
