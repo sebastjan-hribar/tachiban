@@ -40,6 +40,7 @@ describe "Authorization" do
 
     after do
       @user = nil
+      FileUtils.rm_rf('../lib/policies/TaskPolicy.rb')
     end
 
 require_relative '../lib/policies/TaskPolicy.rb'
