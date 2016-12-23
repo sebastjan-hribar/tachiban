@@ -1,5 +1,5 @@
 require 'test_helper'
-require_relative 'policies/TaskPolicy.rb'
+
 
 
 class User
@@ -35,11 +35,14 @@ describe "Authorization" do
       permissions: [1,2,3], role: "normal_user")
       @role = @user.role
       @permissions = @user.permissions
+      generate_policy("task")
     end
 
     after do
       @user = nil
     end
+
+require_relative '../lib/policies/TaskPolicy.rb'
 
     it "authorizes the user" do
       assert authorized? == true, "User is authorized"

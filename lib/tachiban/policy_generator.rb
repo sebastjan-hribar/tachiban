@@ -51,6 +51,6 @@ def generate_policy(controller_name)
 
   FileUtils.mkdir_p 'lib/policies/' unless File.directory?('lib/policies')
   unless File.file?("lib/policies/#{controller}Policy.rb")
-    File.open("lib/policies/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
+    File.new("lib/policies/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
   end
 end
