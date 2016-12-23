@@ -82,13 +82,8 @@ module Hanami
   #
   # Example: "Some application - password reset link" or "Password reset link"
 
-    def subject(app_name = "")
-      name = app_name
-      if name == ""
-        return "Password reset"
-      else
-        return "#{name} - password reset link"
-      end
+    def subject(name = "")
+      name.empty? ? "Password reset" : "#{name} - password reset link"
     end
 
 
