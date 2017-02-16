@@ -73,7 +73,7 @@ module Hanami
   # URL example: "http://localhost:2300/passwordupdate/"
 
     def email_body(url, token)
-      "Click the link to reset your password: #{url}#{token}."
+      "Visit the link to reset your password: #{url}#{token}."
     end
 
   # The email subject method provides the subject for the password reset email
@@ -82,12 +82,7 @@ module Hanami
   # Example: "Some application - password reset link" or "Password reset link"
 
     def subject(app_name = "")
-      name = app_name
-      if name == ""
-        return "Password reset"
-      else
-        return "#{name} - password reset link"
-      end
+      name.empty? ? "Password reset" : "#{name} - password reset link"
     end
 
   end
