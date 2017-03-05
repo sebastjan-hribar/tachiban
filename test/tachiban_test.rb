@@ -18,7 +18,7 @@ describe 'Hanami::Tachiban' do
 
   it "provides a default basic password reset body text" do
     body = email_body("http://localhost:2300/passwordupdate/", "asdasdasdaerwrw")
-    body.must_include("Click the link to reset your password")
+    body.must_include("Visit the link to reset your password")
     body.must_include("http://localhost:2300/passwordupdate/asdasdasdaerwrw")
   end
 
@@ -29,7 +29,7 @@ describe 'Hanami::Tachiban' do
 
   it "provides a subject without the app name" do
     email_subject = subject
-    email_subject.must_equal("Password reset")
+    email_subject.must_equal("Password reset url")
   end
 
 end

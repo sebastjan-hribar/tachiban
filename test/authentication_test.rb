@@ -9,10 +9,9 @@ class Login
   include Hanami::Action
   include Hanami::Action::Session
 
-
   def call(params)
     @user = params[:user]
-    login
+    login("You were successfully logged in.")
   end
 end
 
@@ -50,5 +49,26 @@ describe "Login" do
       @action.session[:current_user].must_be_nil
     end
   end
+
+end
+
+
+describe "Session validity" do
+
+  describe "with a valid new request" do
+
+    it 'a new request comes in on time' do
+    end
+    
+  end
+
+
+  describe "with an invalid new request" do
+
+    it 'a new request comes in too late' do
+    end
+
+  end
+  
 
 end

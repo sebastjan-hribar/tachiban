@@ -9,6 +9,7 @@ module Hanami
 
   
   # ### Signup methods ###
+
   # The hashed_password method generates a hashed version of the user's
   # password. By default it includes a salt and the default cost factor
   # of 10 provided by BCrypt. Hashed password should be stored in the database
@@ -18,39 +19,93 @@ module Hanami
       BCrypt::Password.create(password)
     end
 
+
   # ### Login methods ###
+  
   # The authenticated? method returns true if the the following criteria
   # are true:
-  # - user
-  # - user's hashed password from the database matches the input password
-
+  # - a user
+  # - a user's hashed password from the database matches the input password
 
     def authenticated?(input_pass)
       @user && BCrypt::Password.new(@user.hashed_pass) == input_pass
     end
 
-  # The login method is to be used in combination with authenticated? method to
+
+  # The login method should be used in combination with the authenticated? method to
   # log the user in if the authenticated? method returns true. The user is
   # logged in by setting the user object as the session[:current_user].
+  # After the user is logged in the session start time is defined, which is then used 
+  # by the check_session_validity method to determine whether the session has
+  # expired.
+
   # Example:
   # login if authenticated?(input_pass)
 
-    def login
+    def login(flash_message)
       session[:current_user] = @user
+      session[:session_start_time] = Time.now
+      flash[:success_notice] = flash_message
+    end
+  
+
+  # The logout method sets the current user in the session to nil
+  # and performs a redirect to "/".
+
+    def logout
+      session[:current_user] = nil
+      redirect_to '/'
     end
 
+
   # ### Authentication methods ###
+
   # The check_for_logged_in_user method can be used to check for each
-  # request whether the user is logged in. If user is not loggen in
-  # they are redirected to "/".
+  # request whether the user is logged in. If user is not logged in
+  # the current user in session is set to nil and redirected to "/".
 
     def check_for_logged_in_user
-      #unless ENV['HANAMI_ENV'] == 'test'
-        redirect_to '/' unless session[:current_user]
-      #end
+        logout unless session[:current_user]
+    end
+
+
+  # Session handling
+
+  # If session start time + validity time is greater
+  # then the current time, the session expires, the
+  # user is logged out and redirected to start page.
+  
+  # The @validity_time method has to be set and specified in seconds.
+  # Example: @validity_time = 600
+
+  # This can be done in a share code module to include the method in
+  # a before call for every action:
+
+  #  module Web
+  #    module Authorization
+  #      def self.included(action)
+  #        action.class_eval do
+  #          @validity_time = 600
+  #          before :check_session_validity
+  #        end
+  #      end
+  #    end
+  #  end
+   
+    def check_session_validity
+      if session[:current_user]
+        if session[:session_start_time] + @validity_time < Time.now
+          session[:current_user] = nil
+          flash[:failed_notice] = "Your session has expired"
+          redirect_to "/"
+        else
+          session[:session_start_time] = Time.now
+        end
+      end
     end
 
   # ### Password reset methods ###
+
   # The password_reset_sent_at method provides the timestamp of when
   # the password has been sent. This can later be used to define the
   # password reset link expiration time.
@@ -67,7 +122,7 @@ module Hanami
     end
 
   # The email_body method provides basic message of the password reset
-  # email. The method accepts the url part of the reset link and the token as
+  # email. The method accepts the url part of the reset url and the token as
   # arguments.
   #
   # URL example: "http://localhost:2300/passwordupdate/"
@@ -79,11 +134,12 @@ module Hanami
   # The email subject method provides the subject for the password reset email
   # and takes the application name as an argument to form the subject.
   #
-  # Example: "Some application - password reset link" or "Password reset link"
+  # Example: "Some application - password reset url" or "Password reset url"
 
     def subject(app_name = "")
-      name.empty? ? "Password reset" : "#{name} - password reset link"
+      app_name.empty? ? "Password reset url" : "#{app_name} - password reset url"
     end
+  
 
   end
 end
