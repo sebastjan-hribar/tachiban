@@ -18,7 +18,7 @@ describe 'Hanami::Tachiban' do
 
   it "provides a default basic password reset body text" do
     body = email_body("http://localhost:2300/passwordupdate/", "asdasdasdaerwrw")
-    body.must_include("Visit the link to reset your password")
+    body.must_include("Use the url to reset your password")
     body.must_include("http://localhost:2300/passwordupdate/asdasdasdaerwrw")
   end
 

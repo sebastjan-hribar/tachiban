@@ -23,7 +23,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "hanami-model", "0.6.1"
   spec.add_development_dependency "timecop", "0.8.1"
+  spec.add_development_dependency 'hanami-controller', "~> 0.6.1"
 
   spec.add_runtime_dependency "bcrypt", "~> 3.1", "~> 3.1"
-  spec.add_runtime_dependency 'hanami-controller', "0.6.1"
+  spec.add_runtime_dependency 'hanami-controller', "~> 0.6.1"
 end

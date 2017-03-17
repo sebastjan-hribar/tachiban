@@ -2,6 +2,7 @@ require "tachiban/version"
 require 'bcrypt'
 require 'hanami/controller'
 require 'hanami/action/session'
+require 'hanami/action'
 require 'hanami/model'
 
 module Hanami
@@ -73,36 +74,29 @@ module Hanami
 
   # If session start time + validity time is greater
   # then the current time, the session expires, the
-  # user is logged out and redirected to start page.
+  # session user is set to nil.
   
-  # The @validity_time method has to be set and specified in seconds.
-  # Example: @validity_time = 600
+  # The @validity_time method can be set and specified in seconds.
+  # Example: @validity_time = 300
+  # Otherwise the deafult session timeout is set to 600 seconds.
 
-  # This can be done in a share code module to include the method in
-  # a before call for every action:
+  # The @redirect_to method can be used to set a specific url to redirect to.
+  # Otherwise the default redirect url is set to "/".
 
-  #  module Web
-  #    module Authorization
-  #      def self.included(action)
-  #        action.class_eval do
-  #          @validity_time = 600
-  #          before :check_session_validity
-  #        end
-  #      end
-  #    end
-  #  end
-   
+  
     def check_session_validity
       if session[:current_user]
+        @validity_time ||= 600
         if session[:session_start_time] + @validity_time.to_i < Time.now
           session[:current_user] = nil
           flash[:failed_notice] = "Your session has expired"
-          redirect_to "/"
+          @redirect_url ? redirect_to @redirect_url : redirect_to "/"
         else
           session[:session_start_time] = Time.now
         end
       end
     end
+
 
   # ### Password reset methods ###
 
@@ -128,7 +122,7 @@ module Hanami
   # URL example: "http://localhost:2300/passwordupdate/"
 
     def email_body(url, token)
-      "Visit the link to reset your password: #{url}#{token}."
+      "Use the url to reset your password: #{url}#{token}."
     end
 
   # The email subject method provides the subject for the password reset email
