@@ -87,10 +87,11 @@ module Hanami
     def check_session_validity
       if session[:current_user]
         @validity_time ||= 600
+        @redirect_url ||= "/"
         if session[:session_start_time] + @validity_time.to_i < Time.now
           session[:current_user] = nil
           flash[:failed_notice] = "Your session has expired"
-          @redirect_url ? redirect_to @redirect_url : redirect_to "/"
+          redirect_to @redirect_url
         else
           session[:session_start_time] = Time.now
         end

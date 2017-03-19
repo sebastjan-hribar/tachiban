@@ -8,14 +8,14 @@ end
 class Login
   include Hanami::Action
   include Hanami::Action::Session
-
-  before :check_session_validity
+before :check_session_validity
 
   def call(params)
     @user = params[:user]
     login("You were successfully logged in.")
   end
 end
+
 
 describe "Login" do
 
@@ -56,17 +56,16 @@ end
 
 
 describe "Session validity" do
-  before do
-    @action = Login.new
-    user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
-    @action.call({ user: user })
-  end
+  
 
   describe "with a valid new request" do
-
+    before do
+      @action = Login.new
+      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+      @action.call({ user: user })
+    end
     it 'a new request comes in on time' do
       Timecop.travel(Time.now + 200) do
-        @action.call({ user: user })
         @validity_time = 500
         @action.session[:current_user].name.must_equal "Tester"
       end
@@ -76,7 +75,11 @@ describe "Session validity" do
 
 
   describe "with an invalid new request" do
-
+    before do
+      @action = Login.new
+      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+      @action.call({ user: user })
+    end
     it 'a new request comes in too late' do
       Timecop.travel(Time.now + 200) do
         @validity_time = 5
