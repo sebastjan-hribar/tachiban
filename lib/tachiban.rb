@@ -86,7 +86,7 @@ module Hanami
   # Otherwise the default redirect url is set to "/".
 
   
-    def check_session_validity?
+    def check_session_validity
       if session[:current_user]
         @validity_time ||= 600
         @redirect_url ||= "/"
@@ -94,10 +94,8 @@ module Hanami
           session[:current_user] = nil
           flash[:failed_notice] = "Your session has expired"
           redirect_to @redirect_url
-          return false
         else
           session[:session_start_time] = Time.now
-          return true
         end
       end
     end
