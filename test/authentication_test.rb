@@ -66,8 +66,7 @@ describe "Session validity" do
 
     it 'a new request comes in on time' do
       Timecop.travel(Time.now + 200) do
-        @validity_time = 500
-        @action.call({ user: @user })
+        @action.instance_variable_set(:@validity_time, 500)
         @action.check_session_validity
         @action.session[:current_user].name.must_equal "Tester"
       end
@@ -80,8 +79,7 @@ describe "Session validity" do
     
     it 'a new request comes in too late' do
       Timecop.travel(Time.now + 200) do
-        @validity_time = 5
-        @action.call({ user: @user })
+        @action.instance_variable_set(:@validity_time, 5)
         @action.check_session_validity
         @action.session[:current_user].name.wont_equal "Tester"
       end
