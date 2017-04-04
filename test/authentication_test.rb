@@ -78,7 +78,7 @@ describe "Session validity" do
   describe "with an invalid new request" do
     
     it 'a new request comes in too late' do
-      Timecop.travel(Time.now + 200) do
+      Timecop.travel(Time.now + 800) do
         @action.instance_variable_set(:@validity_time, 5)
         @action.check_session_validity
         @action.session[:current_user].name.wont_equal "Tester"
