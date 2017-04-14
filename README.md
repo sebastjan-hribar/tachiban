@@ -2,15 +2,16 @@
 
 [![Join the chat at https://gitter.im/sebastjan-hribar/tachiban](https://badges.gitter.im/sebastjan-hribar/tachiban.svg)](https://gitter.im/sebastjan-hribar/tachiban?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Tachiban (立ち番 - standing watch) provides simple authentication system by using bcrypt for password hashing and
+Tachiban (立ち番 - standing watch) provides simple authentication system for [Hanami web applications](http://hanamirb.org/) by using bcrypt for password hashing and
 offers the following functionalities (with methods listed below
   under Methods by features):
 - Signup
 - Login
 - Authentication
+- Session handling
 - Password reset
 
-The Tachiban code was extracted from a Hanami based web app using
+The Tachiban logic and code were extracted from a Hanami based web app using
 Hanami::Model and was also used in a Camping based web app using Active Record.
 
 
@@ -35,15 +36,7 @@ And include it in you application:
 ```ruby
 include Tachiban
 ```
-For Hanami based apps include it in the controller
-prepare block in the `application.rb`:
-
-```ruby
-controller.prepare do
-  #...
-  include Tachiban
-end
-``` -->
+-->
 
 ## Usage
 
@@ -107,8 +100,8 @@ token
 ```
 
 ### ToDo
-1. Setup default title and body for password reset e-mail.
-2. Include level based authorization checking.
+1. Add the password update functionality.
+2. Include level based authorizations.
 
 <!-- ## Development
 
