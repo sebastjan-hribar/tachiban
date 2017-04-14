@@ -1,8 +1,11 @@
 require 'test_helper'
 
-class User
-  include Hanami::Entity
-  attributes :id, :name, :hashed_pass
+class User < Hanami::Entity
+  attributes do
+    attribute :id,           Types::Int
+    attribute :name,         Types::String
+    attribute :hashed_pass,   Types::String
+  end
 end
 
 class Login
@@ -70,12 +73,12 @@ describe "Session validity" do
         @action.send(:session_expired?).must_equal false
       end
     end
-    
+
   end
 
 
   describe "with an invalid new request" do
-    
+
     it 'a new request comes in too late' do
       Timecop.travel(Time.now + 800) do
         @action.instance_variable_set(:@validity_time, 5)

@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Sebastjan Hribar"]
   spec.email         = ["sebastjan.hribar@gmail.com"]
 
-  spec.summary       = %q{Tachiban provides simple password hashing for user authentication with bcrypt.}
+  spec.summary       = %q{Tachiban provides simple password hashing for user authentication with bcrypt for Hanami web applications.}
   spec.homepage      = "https://github.com/sebastjan-hribar/tachiban"
   spec.license       = "MIT"
 
@@ -21,11 +21,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "hanami-model", "0.6.1"
+  spec.add_development_dependency "hanami-model", "~> 1.0"
   spec.add_development_dependency "timecop", "0.8.1"
-  spec.add_development_dependency 'hanami-controller', "~> 0.6.1"
+  spec.add_development_dependency 'hanami-controller', "~> 1.0"
   spec.add_development_dependency 'hanami-router'
 
-  spec.add_runtime_dependency "bcrypt", "~> 3.1", "~> 3.1"
-  spec.add_runtime_dependency 'hanami-controller', "~> 0.6.1"
+  spec.add_runtime_dependency "bcrypt", "~> 3.1"
+  spec.add_runtime_dependency 'hanami-controller', "~> 1.0"
+  spec.add_runtime_dependency 'hanami-router'
 end

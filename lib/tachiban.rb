@@ -149,7 +149,7 @@ private
 
   # The email subject method provides the subject for the password reset email
   # and takes the application name as an argument to form the subject.
-  
+
   # Example: "Some application - password reset url" or "Password reset url"
 
     def subject(app_name = "")

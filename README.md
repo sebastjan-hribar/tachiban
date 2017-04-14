@@ -41,6 +41,16 @@ include Tachiban
 ## Usage
 
 #### Prerequisites
+
+###### Signup
+
+###### Login
+
+###### Authentication
+
+###### Session handling
+
+###### Password reset
 The entity for which authentication is used has to have the attribute
 of `hashed_pass` which holds the generated hashed password.
 
