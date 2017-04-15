@@ -15,6 +15,7 @@ class Login
 
   def call(params)
     @user = params[:user]
+    require 'pry'; pry
     login("You were successfully logged in.")
   end
 end

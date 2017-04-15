@@ -46,6 +46,8 @@ private
       session[:current_user] = @user
       session[:session_start_time] = Time.now
       flash[:success_notice] = flash_message
+
+      require 'pry'; pry
     end
 
 
