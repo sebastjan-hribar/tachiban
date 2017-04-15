@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "timecop", "0.8.1"
   spec.add_development_dependency 'hanami-controller', "~> 1.0"
   spec.add_development_dependency 'hanami-router'
+  spec.add_development_dependency 'pry'
 
   spec.add_runtime_dependency "bcrypt", "~> 3.1"
   spec.add_runtime_dependency 'hanami-controller', "~> 1.0"
