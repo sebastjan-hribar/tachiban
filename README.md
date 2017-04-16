@@ -9,7 +9,6 @@ offers the following functionalities (with methods listed below
 - Login
 - Authentication
 - Session handling
-- Password reset
 
 The Tachiban logic and code were extracted from a Hanami based web app using
 Hanami::Model and was also used in a Camping based web app using Active Record.
@@ -41,77 +40,104 @@ include Tachiban
 ## Usage
 
 #### Prerequisites
+The entity for which authentication is used must have the
+attribute `hashed_pass` to hold the generated hashed password.
+
+Prior to authenticating or logging in the entity, it has to be retrieved from the database and assigned to instance variable of `@user`.
+
+
+#### Usage by features
 
 ###### Signup
+To create a user with a hashed password use the `hashed_password(password)` method for the password and store it as the user's attribute `hashed_pass`.
 
-###### Login
-
-###### Authentication
-
-###### Session handling
-
-###### Password reset
-The entity for which authentication is used has to have the attribute
-of `hashed_pass` which holds the generated hashed password.
-
-Prior to authenticating or logging in the entity, it has to be found
-in the database.
-
-Example:
+*Example*
 
 ```ruby
-# In the create action for an entity session
+# Create action for an entity
+def call(params)
+  password = params[:newuser][:password]
+  hashed_pass = hashed_password(password)
+  repository = UserRepository.new
+
+  @user = repository.create(name: name, surname: surname, email: email,
+  hashed_pass: hashed_pass))
+end
+```
+
+###### Login
+To authenticate a user use the `authenticated?(input_password)` method and log them in with the `login` method. Authentication is successful if the user exists and passwords match.
+
+The user is logged in by setting the user object as the `session[:current_user]`. After the user is logged in the session start time is defined as `session[:session_start_time] = Time.now`. A flash message is also assigned as `flash[:success_notice] = flash_message`.
+
+The `session[:session_start_time]` is then used by the `session_expired?` method to determine whether the session has expired or not.
+
+*Example*
+
+```ruby
+# Create action for an entity session
 email = params[:entity_session][:email]
 password = params[:entity_session][:password]
 
-@user = EntityRepository.find_by_email(email)
-login if authenticated?(password)
+@user = EntityRepository.new.find_by_email(email)
+login("You have been successfully logged in.") if authenticated?(password)
 ```
 
 
-#### Methods by features:
+###### Authentication
+To check whether the user is logged in use the `check_for_logged_in_user
+` method.
 
-##### Signup
-To generate hashed password
 
+###### Session handling
+Tachiban handles session expiration by checking if a session has
+expired and then restarts the session start time if the session
+is still valid or proceeds with the following if the session
+has expired:
+
+- setting the `session[:current_user]` to `nil`
+- a flash message is set: `flash[:failed_notice] = "Your session has expired"`
+- redirects to the `routes.root_path` which can be overwritten by assigning
+a different url to @redirect_url
+
+
+The `session_expired?` method compares the session start time
+increased for the defined `@validity_time` (set to 10 minutes
+by default, but can be overwritten) with the current time.
+
+`handle_session` method:
 ```ruby
-hashed_password(password)
+  def handle_session
+    if session_expired?
+      @redirect_url ||= routes.root_path
+      session[:current_user] = nil
+      flash[:failed_notice] = "Your session has expired"
+      redirect_to @redirect_url
+    else
+      restart_session_counter
+    end
+  end
 ```
-##### Login
-To check the user's credentials
+
+*Example of session handling in a share code module*
 
 ```ruby
-authenticated?(input_pass)
-```
+module Web
+  module HandleSession
 
-To login the authenticated user and set the user object
- as `session[:current_user]`
+     def self.included(action)
+       action.class_eval do
+         before :handle_session
+       end
+     end
 
-```ruby
-login
-```
-##### Authentication
-To check whether the user is logged in
-```ruby
-check_for_logged_in_user
-```
-
-
-
-##### Password reset
-To set the password reset sent time
-```ruby
-password_reset_sent_at
-```
-
-To generate a random url token
-```ruby
-token
+  end
+end
 ```
 
 ### ToDo
-1. Add the password update functionality.
-2. Include level based authorizations.
+1. Add support for password reset and update.
+2. Add support for level based authorizations.
 
 <!-- ## Development
 

@@ -116,47 +116,6 @@ private
       end
     end
 
-
-  # ### Password reset methods ###
-
-  # The password_reset_sent_at method provides the timestamp of when
-  # the password has been sent. This can later be used to define the
-  # password reset link expiration time.
-
-    def password_reset_sent_at
-      Time.now
-    end
-
-
-  # The token method generates a token to be used for building unique links
-  # for password confirmation requests.
-
-    def token
-      SecureRandom.urlsafe_base64
-    end
-
-
-  # The email_body method provides basic message of the password reset
-  # email. The method accepts the url part of the reset url and the token as
-  # arguments.
-  #
-  # URL example: "http://localhost:2300/passwordupdate/"
-
-    def email_body(url, token)
-      "Use the url to reset your password: #{url}#{token}."
-    end
-
-
-  # The email subject method provides the subject for the password reset email
-  # and takes the application name as an argument to form the subject.
-
-  # Example: "Some application - password reset url" or "Password reset url"
-
-    def subject(app_name = "")
-      app_name.empty? ? "Password reset url" : "#{app_name} - password reset url"
-    end
-
-
   end
 end
 

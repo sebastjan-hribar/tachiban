@@ -14,7 +14,7 @@ class Login
 
 
   def call(params)
-    @user = params[:user]
+    @user = params.env[:user]
     login("You were successfully logged in.")
   end
 end
