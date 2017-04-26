@@ -14,7 +14,7 @@ The Tachiban logic and code were extracted from a Hanami based web app using
 Hanami::Model and was also used in a Camping based web app using Active Record.
 
 
-<!--## Installation
+## Installation
 
  Add this line to your application's Gemfile:
 
@@ -30,12 +30,15 @@ Or install it yourself as:
 
     $ gem install tachiban
 
-And include it in you application:
+Tachiban is already setup to be included by your Hanami application:
 
 ```ruby
-include Tachiban
+::Hanami::Controller.configure do
+  prepare do
+    include Hanami::Tachiban
+  end
+end
 ```
--->
 
 ## Usage
 
@@ -43,7 +46,7 @@ include Tachiban
 The entity for which authentication is used must have the
 attribute `hashed_pass` to hold the generated hashed password.
 
-Prior to authenticating or logging in the entity, it has to be retrieved from the database and assigned to instance variable of `@user`.
+Prior to authenticating or logging in the user, retrieve them from the database and assign them to the instance variable of `@user`.
 
 
 #### Usage by features
