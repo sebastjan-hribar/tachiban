@@ -3,15 +3,6 @@ include Hanami::Tachiban
 
 describe 'Hanami::Tachiban' do
 
-  describe 'Generate hashed password' do
-
-    it 'can generate password' do
-      password = hashed_password("pass123")
-      password.must_be_kind_of String
-    end
-
-  end
-  
   describe 'Password reset' do
 
     it "password_reset_sent_at is of type Time" do
