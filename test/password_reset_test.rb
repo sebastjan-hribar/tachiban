@@ -1,13 +1,16 @@
 require 'test_helper'
 include Hanami::Tachiban
 
+
+
 describe 'Hanami::Tachiban' do
 
   describe 'Password reset' do
 
-    it "password_reset_sent_at is of type Time" do
-      password_reset_sent_at.must_be_kind_of Time
+    before do
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"), password_reset_sent_at: Time.now)
     end
+
 
     it "generates token for password reset url" do
       assert token.length > 20
@@ -25,6 +28,17 @@ describe 'Hanami::Tachiban' do
       The url will be valid for 2 hour(s).")
     end
 
+    it "checks the validity of the password reset url" do
+      Timecop.travel(Time.now + 7400) do
+        assert_equal true, password_reset_url_valid?(7200)
+      end
+    end
+    
+    it "checks that password reset url is not valid" do
+      Timecop.travel(Time.now + 700) do
+        assert_equal false, password_reset_url_valid?(7200)
+      end
+    end
 
   end
 
