@@ -1,7 +1,4 @@
 require 'test_helper'
-include Hanami::Tachiban
-
-
 
 describe 'Hanami::Tachiban' do
 
@@ -33,7 +30,7 @@ describe 'Hanami::Tachiban' do
         assert_equal true, password_reset_url_valid?(7200)
       end
     end
-    
+
     it "checks that password reset url is not valid" do
       Timecop.travel(Time.now + 700) do
         assert_equal false, password_reset_url_valid?(7200)
@@ -41,5 +38,6 @@ describe 'Hanami::Tachiban' do
     end
 
   end
+
 
 end
