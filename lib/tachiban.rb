@@ -132,10 +132,11 @@ private
       The url will be valid for #{link_validity} #{time_unit}(s)."
     end
 
-    # The link_validity must be stated in seconds.
+    # State the link_validity in seconds.
     def password_reset_url_valid?(link_validity)
       Time.now > @user.password_reset_sent_at + link_validity
     end
+
 
   end
 end
