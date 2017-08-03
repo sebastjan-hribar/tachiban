@@ -138,8 +138,42 @@ module Web
 end
 ```
 
+
+###### Password reset
+The password reset feature provides a few simple methods to generate a 
+token, email subject and body. It is also possible to specify and 
+check the validity of the password reset url.
+
+The token can be used to compose the password reset url. It can be stored 
+as the user's attribute and then used to retrieve the correct user from 
+the database when the user visits the password reset url.
+
+```ruby
+token # => "YbRucc8YUlFJrYYp04eQKQ"
+```
+
+```ruby
+email_subject(SomeApp) # => "SomeApp -- password reset request"
+```
+
+
+Provide the base url, the token and the number and type of the time units
+ for the validity of the link.
+ 
+```ruby
+body = email_body(base_url, url_token, 2, "hour")
+# => "Visit this url to reset your password: http://localhost:2300/passwordupdate/asdasdasdaerwrw.
+#     The url will be valid for 2 hour(s).")
+```
+
+The link validity must me specified in seconds.
+```ruby
+password_reset_url_valid?(link_validity)
+```
+
+
 ### ToDo
-1. Add support for password reset and update.
+~~1. Add support for password reset and update.~~
 2. Add support for level based authorizations.
 
 <!-- ## Development
