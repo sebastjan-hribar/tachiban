@@ -173,8 +173,8 @@ password_reset_url_valid?(link_validity)
 
 
 ### ToDo
-~~1. Add support for password reset and update.~~
-2. Add support for level based authorizations.
+
+- Add support for level based authorizations.
 
 <!-- ## Development
 
