@@ -175,6 +175,7 @@ password_reset_url_valid?(link_validity)
 ### ToDo
 
 - Add support for level based authorizations.
+- Authorization setup inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/).
 
 <!-- ## Development
 
