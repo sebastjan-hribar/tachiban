@@ -12,31 +12,34 @@ def generate_policy(app_name, controller_name)
     class #{controller}Policy
       attr_reader :role, :permissions
       def initialize(role, permissions)
-        @role = role
-        @permissions = permissions
+        @requesting_role = role
+        @requesting_permissions = permissions
       end
+
+
       # Uncomment the required actions and set the
       # appropriate user role.
-      def new?
-        @role == 'user_role' && @permissions.include?(1)
-      end
+
+      #def new?
+      #  @requesting_role == 'user_role' && @requesting_permissions.include?(1)
+      #end
       #def create?
-      #  @role == 'user_role' && @permissions.include?(2)
+      #  @requesting_role == 'user_role' && @requesting_permissions.include?(2)
       #end
       #def show?
-      #  @role == 'user_role' && @permissions.include?(3)
+      #  @requesting_role == 'user_role' && @requesting_permissions.include?(3)
       #end
       #def index?
-      #  @role == 'user_role' && @permissions.include?(4)
+      #  @requesting_role == 'user_role' && @requesting_permissions.include?(4)
       #end
       #def edit?
-      #  @role == 'user_role' && @permissions.include?(5)
+      #  @requesting_role == 'user_role' && @requesting_permissions.include?(5)
       #end
       #def update?
-      #  @role == 'user_role' && @permissions.include?(6)
+      #  @requesting_role == 'user_role' && @requesting_permissions.include?(6)
       #end
       #def destroy?
-      #  @role == 'user_role' && @permissions.include?(7)
+      #  @requesting_role == 'user_role' && @requesting_permissions.include?(7)
       #end
     end
     TXT
