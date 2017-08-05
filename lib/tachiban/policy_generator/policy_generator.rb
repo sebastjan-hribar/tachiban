@@ -1,12 +1,12 @@
 require 'fileutils'
 
 # The generate_policy method creates the policy file for specified
-# controller. By default all actions to check against are commented out.
+# application and controller. By default all actions to check against
+# are commented out.
 # Uncomment the needed actions and define appropriate user role.
-#
-# The file is created only if it doesn't exist already.
 
-def generate_policy(controller_name)
+def generate_policy(app_name, controller_name)
+  app_name = app_name
   controller = controller_name.downcase.capitalize
   policy_txt = <<-TXT
     class #{controller}Policy
@@ -41,8 +41,9 @@ def generate_policy(controller_name)
     end
     TXT
 
-  FileUtils.mkdir_p 'lib/policies/' unless File.directory?('lib/policies')
-  unless File.file?("lib/policies/#{controller}Policy.rb")
-    File.open("lib/policies/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
+  file_path = "#{File.expand_path('../../lib/policies', __FILE__)}"
+  FileUtils.mkdir_p "#{file_path}/#{app_name}" unless File.directory?("#{file_path}/#{app_name}")
+  unless File.file?("#{file_path}/#{app_name}/#{controller}Policy.rb")
+    File.open("#{file_path}/#{app_name}/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
   end
 end
