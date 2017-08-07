@@ -1,5 +1,7 @@
 require 'test_helper'
 require_relative 'testApp/lib/policies/firstApp/TaskPolicy.rb'
+require_relative '../lib/tachiban/policy_generator/policy_generator.rb'
+#include Tachiban::PolicyGenerator
 
 
 module Web
@@ -55,6 +57,16 @@ describe "Authorization" do
     it 'doesnt authorize the user' do
       refute authorized?, "User is not authorized"
     end
+  end
+
+end
+
+describe "Policy generation" do
+
+  it "generates a policy for the app and controller" do
+    path_to_app = File.expand_path('../../testApp/lib/policies/firstApp', __FILE__)
+    generate_policy("testApp", "job")
+    assert File.file?("testApp/lib/policies/firstApp/JobPolicy.rb"), "The policy file is created."
   end
 
 end

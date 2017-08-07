@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require_relative "../../lib/tachiban/policy_generator/policy_generator.rb"
+
+policy_generator.rb

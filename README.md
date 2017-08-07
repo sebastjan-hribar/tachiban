@@ -42,8 +42,9 @@ end
 
 ## Usage
 
-#### Prerequisites
-The entity for which authentication is used must have the
+#### Prerequisites by features
+
+* The entity for which authentication is used must have the
 attribute `hashed_pass` to hold the generated hashed password.
 
 Prior to authenticating or logging in the user, retrieve them from the database and assign them to the instance variable of `@user`.
