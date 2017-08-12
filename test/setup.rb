@@ -4,7 +4,6 @@ class User < Hanami::Entity
     attribute :name,                    Types::String
     attribute :hashed_pass,             Types::String
     attribute :password_reset_sent_at,  Types::Time
-    attribute :permissions,             Types::Array
     attribute :role,                    Types::String
   end
 end

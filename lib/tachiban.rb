@@ -146,7 +146,7 @@ private
   # Example: redirect_to "/" unless authorized?
   
     def authorized?
-      Object.const_get(@controller_name + "Policy").new(@role, @permissions).send("#{@action_name.downcase}?")
+      Object.const_get(@controller_name + "Policy").new(@role).send("#{@action_name.downcase}?")
     end
 
 

@@ -1,30 +1,39 @@
 class TaskPolicy
-  attr_reader :role, :permissions
-  def initialize(role, permissions)
-    @requesting_role = role
-    @requesting_permissions = permissions
+
+  def initialize(role)
+    @user_role = role
+    
+    # Uncomment the required roles and add the
+    # appropriate user role to the @authorized_roles* array.
+  
+    @authorized_roles_for_new = ["level_one_user"]
+    # @authorized_roles_for_create = []
+    # @authorized_roles_for_show = []
+    # @authorized_roles_for_index = []
+    # @authorized_roles_for_edit = []
+    # @authorized_roles_for_update = []
+    # @authorized_roles_for_destroy = []
   end
-  # Uncomment the required actions and set the
-  # appropriate user role.
+
   def new?
-    @requesting_role == 'level_one_user' && @requesting_permissions.include?(1)
+    @authorized_roles_for_new.include? @user_role
   end
-  #def create?
-  #  @requesting_role == 'user_role' && @requesting_permissions.include?(2)
-  #end
-  #def show?
-  #  @requesting_role == 'user_role' && @requesting_permissions.include?(3)
-  #end
-  #def index?
-  #  @requesting_role == 'user_role' && @requesting_permissions.include?(4)
-  #end
-  #def edit?
-  #  @requesting_role == 'user_role' && @requesting_permissions.include?(5)
-  #end
-  #def update?
-  #  @requesting_role == 'user_role' && @requesting_permissions.include?(6)
-  #end
-  #def destroy?
-  #  @requesting_role == 'user_role' && @requesting_permissions.include?(7)
-  #end
+  def create?
+    @authorized_roles_for_create.include? @user_role
+  end
+  def show?
+    @authorized_roles_for_show.include? @user_role
+  end
+  def index?
+    @authorized_roles_for_index.include? @user_role
+  end
+  def edit?
+    @authorized_roles_for_edit.include? @user_role
+  end
+  def update?
+    @authorized_roles_for_update.include? @user_role
+  end
+  def destroy?
+    @authorized_roles_for_destroy.include? @user_role
+  end
 end

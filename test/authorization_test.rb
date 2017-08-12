@@ -29,9 +29,8 @@ describe "Authorization" do
   describe "with authorized user" do
     before do
       @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"),
-      permissions: [1,2,3], role: "level_one_user")
+      role: "level_one_user")
       @role = @user.role
-      @permissions = @user.permissions
     end
 
     after do
@@ -46,8 +45,7 @@ describe "Authorization" do
 
   describe "with unauthorized user" do
     before do
-      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"),
-      permissions: [], role: "guest_user")
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"), role: "guest_user")
     end
 
     after do
@@ -57,16 +55,6 @@ describe "Authorization" do
     it 'doesnt authorize the user' do
       refute authorized?, "User is not authorized"
     end
-  end
-
-end
-
-describe "Policy generation" do
-
-  it "generates a policy for the app and controller" do
-    path_to_app = File.expand_path('../../testApp/lib/policies/firstApp', __FILE__)
-    generate_policy("testApp", "job")
-    assert File.file?("testApp/lib/policies/firstApp/JobPolicy.rb"), "The policy file is created."
   end
 
 end

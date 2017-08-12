@@ -10,44 +10,53 @@ require 'fileutils'
     app_name = app_name
     controller = controller_name.downcase.capitalize
     policy_txt = <<-TXT
-      class #{controller}Policy
-        attr_reader :role, :permissions
-        def initialize(role, permissions)
-          @requesting_role = role
-          @requesting_permissions = permissions
+      class TaskPolicy
+        def initialize(role)
+          @user_role = role
+          
+          # Uncomment the required roles and add the
+          # appropriate user role to the @authorized_roles* array.
+        
+          # @authorized_roles_for_new = []
+          # @authorized_roles_for_create = []
+          # @authorized_roles_for_show = []
+          # @authorized_roles_for_index = []
+          # @authorized_roles_for_edit = []
+          # @authorized_roles_for_update = []
+          # @authorized_roles_for_destroy = []
         end
 
-
-        # Uncomment the required actions and set the
-        # appropriate user role.
-
-        #def new?
-        #  @requesting_role == 'user_role' && @requesting_permissions.include?(1)
-        #end
-        #def create?
-        #  @requesting_role == 'user_role' && @requesting_permissions.include?(2)
-        #end
-        #def show?
-        #  @requesting_role == 'user_role' && @requesting_permissions.include?(3)
-        #end
-        #def index?
-        #  @requesting_role == 'user_role' && @requesting_permissions.include?(4)
-        #end
-        #def edit?
-        #  @requesting_role == 'user_role' && @requesting_permissions.include?(5)
-        #end
-        #def update?
-        #  @requesting_role == 'user_role' && @requesting_permissions.include?(6)
-        #end
-        #def destroy?
-        #  @requesting_role == 'user_role' && @requesting_permissions.include?(7)
-        #end
+        def new?
+          @authorized_roles_for_new.include? @user_role
+        end
+        def create?
+          @authorized_roles_for_create.include? @user_role
+        end
+        def show?
+          @authorized_roles_for_show.include? @user_role
+        end
+        def index?
+          @authorized_roles_for_index.include? @user_role
+        end
+        def edit?
+          @authorized_roles_for_edit.include? @user_role
+        end
+        def update?
+          @authorized_roles_for_update.include? @user_role
+        end
+        def destroy?
+          @authorized_roles_for_destroy.include? @user_role
+        end
       end
       TXT
-    file_path = "#{File.expand_path('../../lib/policies', __FILE__)}"
-    FileUtils.mkdir_p "#{file_path}/#{app_name}" unless File.directory?("#{file_path}/#{app_name}")
-    unless File.file?("#{file_path}/#{app_name}/#{controller}Policy.rb")
-      File.open("#{file_path}/#{app_name}/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
+
+    #file_path = Pathname("/some/really/deep/file/in/some/really/deep/folder")
+    #dir = nil
+    #file_path.ascend { |f| dir = f and break if f.basename.to_s == "some" }
+    #file_path = "#{File.expand_path('../../lib/#{app_name}', __FILE__)}"
+    FileUtils.mkdir_p "lib/#{app_name}/policies" unless File.directory?("lib/#{app_name}/policies")
+    unless File.file?("lib/#{app_name}/policies/#{controller}Policy.rb")
+      File.open("lib/#{app_name}/policies/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
     end
   end
 #end
