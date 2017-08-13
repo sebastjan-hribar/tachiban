@@ -195,12 +195,13 @@ Authorization support was setup as inspired by [this blog post](http://billpatri
 Authorization features support the generation of policy files for each controller where authorized roles are specified for each action.
 
 ```ruby
-generate_policy(app_name, controller_name)
+tachiban -n mightyPoster -p post
 ```
-The `generate_policy(mightyPoster, post)` will generate a policy file for the application mightyPoster (not the project) and the controller post. The file will be generated as `myProject/lib/mightyPoster/policies/PostPolicy.rb`
+The above CLI command will generate a policy file for the application mightyPoster (not the project) and the controller post. The file will be generated as `myProject/lib/mightyPoster/policies/PostPolicy.rb`
 
 Each application would have its own `app/policies` folders.
 
+**The command must be run in the project root folder.**
 
 Once the file is generated the authorized roles variables in the initi block for required actions need to be uncommneted and supplied with specific roles.
 

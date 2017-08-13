@@ -1,10 +1,12 @@
 #!/usr/bin/env ruby
 require 'optparse'
+require_relative "../../lib/tachiban/policy_generator/policy_generator.rb"
+
 
 options = {}
 optparse = OptionParser.new do |opts|
   opts.banner = "\nHanami authorization policy generator
-Usage: ./tachiban -n myapp -p user
+Usage: tachiban -n myapp -p user
 Flags:
 \n"
 
@@ -32,6 +34,7 @@ begin
   unless missing.empty?
     raise OptionParser::MissingArgument.new(missing.join(', '))
   end
+  
 rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   puts $!.to_s
   puts optparse
@@ -39,3 +42,4 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
 end
 
 puts "Performing task with options: #{options.inspect}"
+generate_policy("#{options[:app_name]}", "#{options[:policy]}") if options[:policy]
