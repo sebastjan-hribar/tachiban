@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-require_relative "../../lib/tachiban/policy_generator/policy_generator.rb"
+require_relative "../lib/tachiban/policy_generator/policy_generator.rb"
 
 
 options = {}
@@ -34,7 +34,7 @@ begin
   unless missing.empty?
     raise OptionParser::MissingArgument.new(missing.join(', '))
   end
-  
+
 rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   puts $!.to_s
   puts optparse
