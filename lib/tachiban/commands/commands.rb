@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-require_relative "../lib/tachiban/policy_generator/policy_generator.rb"
+require_relative "../policy_generator/policy_generator.rb"
 
 
 options = {}
