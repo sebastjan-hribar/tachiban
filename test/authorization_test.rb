@@ -1,7 +1,7 @@
 require 'test_helper'
-require_relative 'testApp/lib/policies/firstApp/TaskPolicy.rb'
+require_relative 'testApp/lib/firstApp/policies/TaskPolicy.rb'
 require_relative '../lib/tachiban/policy_generator/policy_generator.rb'
-#include Tachiban::PolicyGenerator
+
 
 
 module Web
@@ -21,6 +21,7 @@ end
 describe "Authorization" do
 
   before do
+    @application_name = "firstApp"
     @action = Web::Controllers::Task::New.new
     @controller_name = @action.controller_name.split("::")[2]
     @action_name = @action.controller_name.split("::")[3]
@@ -38,7 +39,7 @@ describe "Authorization" do
     end
 
     it "authorizes the user" do
-      assert authorized? == true, "User is authorized"
+      assert authorized?(@controller_name, @role, @action_name) == true, "User is authorized"
     end
   end
 
@@ -53,8 +54,33 @@ describe "Authorization" do
     end
 
     it 'doesnt authorize the user' do
-      refute authorized?, "User is not authorized"
+      refute authorized?(@controller_name, @role, @action_name) == true, "User is not authorized"
     end
   end
+
+
+  describe "policy file creation" do
+    before do
+      @new_controller = "Post"
+    end
+
+    after do
+      Dir.chdir('test/testApp') do
+        File.delete("lib/#{@application_name}/policies/#{@new_controller}Policy.rb")
+      end
+    end
+
+
+    it "generates policy" do
+      Dir.chdir('test/testApp') do
+        generate_policy(@application_name, @new_controller)
+        generated_policy_string = "lib/#{@application_name}/policies/#{@new_controller}Policy.rb"
+        assert File.file?("lib/#{@application_name}/policies/#{@new_controller}Policy.rb"), "The file lib/#{@application_name}/policies/#{@new_controller}Policy.rb is generated"
+        assert File.readlines(generated_policy_string).grep(/authorized_roles_for_new/).size > 0, "The file has content authorized_roles_for_new."
+      end
+
+    end
+  end
+
 
 end

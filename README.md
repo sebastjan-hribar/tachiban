@@ -9,8 +9,10 @@ offers the following functionalities (with methods listed below
 - Login
 - Authentication
 - Session handling
+- Password reset
+- Authorization
 
-The Tachiban logic and code were extracted from a Hanami based web app using
+The Tachiban logic (apart from the Authorization) and code were extracted from a Hanami based web app using
 Hanami::Model and was also used in a Camping based web app using Active Record.
 
 
@@ -42,18 +44,28 @@ end
 
 ## Usage
 
-#### Prerequisites by features
+#### Prerequisites
+Prior to logging in or authenticating the user, retrieve the entity from the
+database and assign it to the instance variable of `@user`.
 
-* The entity for which authentication is used must have the
-attribute `hashed_pass` to hold the generated hashed password.
+The password reset methods require the user entity to have the following attributes:
+**token** and **password_reset_sent_at (set as `Time.now`)**. The token can be used to compose
+ the password reset url and to later retrieve the correct user from
+the database when the user visits the password reset url.
 
-Prior to authenticating or logging in the user, retrieve them from the database and assign them to the instance variable of `@user`.
+The **password_reset_sent_at** can be used to check the reset link validity.
+
+The only prerequisite for the authorization is the attribute of **role** for the user entity.
 
 
-#### Usage by features
+#### Usage
 
 ###### Signup
-To create a user with a hashed password use the `hashed_password(password)` method for the password and store it as the user's attribute `hashed_pass`.
+The entity for which authentication is used must have the
+attribute `hashed_pass` to hold the generated hashed password.
+
+To create a user with a hashed password use the `hashed_password(password)`
+method for the password and store it as the user's attribute `hashed_pass`.
 
 *Example*
 
@@ -70,13 +82,18 @@ end
 ```
 
 ###### Login
-To authenticate a user use the `authenticated?(input_password)` method and log them in with the `login` method. Authentication is successful if the user exists and passwords match.
+To authenticate a user use the `authenticated?(input_password)` method and log
+them in with the `login` method. Authentication is successful if the user exists and passwords match.
 
-The user is logged in by setting the user object as the `session[:current_user]`. After the user is logged in the session start time is defined as `session[:session_start_time] = Time.now`. A flash message is also assigned as `flash[:success_notice] = flash_message`.
+The user is logged in by setting the user object as the `session[:current_user]`.
+After the user is logged in the session start time is defined as
+`session[:session_start_time] = Time.now`. A flash message is also
+assigned as `flash[:success_notice] = flash_message`.
 
-The `session[:session_start_time]` is then used by the `session_expired?` method to determine whether the session has expired or not.
+The `session[:session_start_time]` is then used by the `session_expired?`
+method to determine whether the session has expired or not.
 
-*Example*
+*Example of session creation for an entity*
 
 ```ruby
 # Create action for an entity session
@@ -89,8 +106,8 @@ login("You have been successfully logged in.") if authenticated?(password)
 
 
 ###### Authentication
-To check whether the user is logged in use the `check_for_logged_in_user
-` method.
+To check whether the user is logged in use the `check_for_logged_in_user` method.
+If the user is not logged in the `logout` method takes over.
 
 
 ###### Session handling
@@ -141,13 +158,9 @@ end
 
 
 ###### Password reset
-The password reset feature provides a few simple methods to generate a 
-token, email subject and body. It is also possible to specify and 
+The password reset feature provides a few simple methods to generate a
+token, email subject and body. It is also possible to specify and
 check the validity of the password reset url.
-
-The token can be used to compose the password reset url. It can be stored 
-as the user's attribute and then used to retrieve the correct user from 
-the database when the user visits the password reset url.
 
 ```ruby
 token # => "YbRucc8YUlFJrYYp04eQKQ"
@@ -160,23 +173,50 @@ email_subject(SomeApp) # => "SomeApp -- password reset request"
 
 Provide the base url, the token and the number and type of the time units
  for the validity of the link.
- 
+
 ```ruby
 body = email_body(base_url, url_token, 2, "hour")
 # => "Visit this url to reset your password: http://localhost:2300/passwordupdate/asdasdasdaerwrw.
 #     The url will be valid for 2 hour(s).")
 ```
 
-The link validity must me specified in seconds.
+The link validity must me specified in seconds. The method compares the
+current time with the time when the password reset link was sent increased
+by the link validity: `Time.now > @user.password_reset_sent_at + link_validity`
+
 ```ruby
 password_reset_url_valid?(link_validity)
 ```
 
 
+###### Authorization
+Authorization support was setup as inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/).
+
+Authorization features support the generation of policy files for each controller where authorized roles are specified for each action.
+
+```ruby
+generate_policy(app_name, controller_name)
+```
+The `generate_policy(mightyPoster, post)` will generate a policy file for the application mightyPoster (not the project) and the controller post. The file will be generated as `myProject/lib/mightyPoster/policies/PostPolicy.rb`
+
+Each application would have its own `app/policies` folders.
+
+
+Once the file is generated the authorized roles variables in the initi block for required actions need to be uncommneted and supplied with specific roles.
+
+Then we can check if a user is authorized:
+
+```ruby
+authorized?(controller, role, action)
+```
+
+
 ### ToDo
 
-- Add support for level based authorizations.
-- Authorization setup inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/).
+- Add support for level based authorizations. [x]
+- Add generators for adding authorization rules to existing policies.
+- Add generators for entities with required attributes.
+
 
 ## Development
 
