@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
-require "commands"
+require_relative "../lib/tachiban/commands/commands.rb"
 
 commands.rb
