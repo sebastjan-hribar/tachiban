@@ -54,4 +54,5 @@ def generate_policy(app_name, controller_name)
   unless File.file?("lib/#{app_name}/policies/#{controller}Policy.rb")
     File.open("lib/#{app_name}/policies/#{controller}Policy.rb", 'w') { |file| file.write(policy_txt) }
   end
+  puts("Generated policy: lib/#{app_name}/policies/#{controller}Policy.rb") if File.file?("lib/#{app_name}/policies/#{controller}Policy.rb")
 end

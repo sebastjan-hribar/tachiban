@@ -203,7 +203,7 @@ Each application would have its own `app/policies` folders.
 
 **The command must be run in the project root folder.**
 
-Once the file is generated the authorized roles variables in the initi block for required actions need to be uncommneted and supplied with specific roles.
+Once the file is generated the authorized roles variables in the initialize block for required actions need to be uncommneted and supplied with specific roles.
 
 Then we can check if a user is authorized:
 
