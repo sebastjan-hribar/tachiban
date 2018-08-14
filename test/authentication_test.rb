@@ -22,7 +22,7 @@ describe "Login" do
     end
 
     it "saves the user to the session" do
-      @action.session[:current_user].name.must_equal "Tester"
+      @action.session[:current_user].must_equal 1
     end
 
   end

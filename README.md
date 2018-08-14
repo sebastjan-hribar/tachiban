@@ -44,7 +44,7 @@ end
 
 ## Usage
 
-#### Prerequisites
+### Prerequisites
 Prior to logging in or authenticating the user, retrieve the entity from the
 database and assign it to the instance variable of `@user`.
 
@@ -58,9 +58,9 @@ The **password_reset_sent_at** can be used to check the reset link validity.
 The only prerequisite for the authorization is the attribute of **role** for the user entity.
 
 
-#### Usage
+### Usage
 
-###### Signup
+#### Signup
 The entity for which authentication is used must have the
 attribute `hashed_pass` to hold the generated hashed password.
 
@@ -81,7 +81,7 @@ def call(params)
 end
 ```
 
-###### Login
+#### Login
 To authenticate a user use the `authenticated?(input_password)` method and log
 them in with the `login` method. Authentication is successful if the user exists and passwords match.
 
@@ -105,12 +105,12 @@ login("You have been successfully logged in.") if authenticated?(password)
 ```
 
 
-###### Authentication
+#### Authentication
 To check whether the user is logged in use the `check_for_logged_in_user` method.
 If the user is not logged in the `logout` method takes over.
 
 
-###### Session handling
+#### Session handling
 Tachiban handles session expiration by checking if a session has
 expired and then restarts the session start time if the session
 is still valid or proceeds with the following if the session
@@ -157,7 +157,7 @@ end
 ```
 
 
-###### Password reset
+#### Password reset
 The password reset feature provides a few simple methods to generate a
 token, email subject and body. It is also possible to specify and
 check the validity of the password reset url.
@@ -189,7 +189,7 @@ password_reset_url_valid?(link_validity)
 ```
 
 
-###### Authorization
+#### Authorization
 Authorization support was setup as inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/).
 
 Authorization features support the generation of policy files for each controller where authorized roles are specified for each action.
@@ -217,6 +217,16 @@ authorized?(controller, role, action)
 - Add support for level based authorizations. [x]
 - Add generators for adding authorization rules to existing policies.
 - Add generators for entities with required attributes.
+
+
+### Changelog
+
+#### 0.5.1
+
+Method: `Tachiban::login`
+
+Change:
+`session[:current_user]` is not set as the user object, but as the user object id.
 
 
 ## Development

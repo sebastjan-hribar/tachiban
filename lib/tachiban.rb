@@ -34,7 +34,7 @@ private
 
   # The login method can be used in combination with the authenticated? method to
   # log the user in if the authenticated? method returns true. The user is
-  # logged in by setting the user object as the session[:current_user].
+  # logged in by setting the user object id as the session[:current_user].
   # After the user is logged in the session start time is defined, which is then used
   # by the session_expired? method to determine whether the session has
   # expired or not.
@@ -43,7 +43,7 @@ private
   # login if authenticated?(input_pass)
 
     def login(flash_message)
-      session[:current_user] = @user
+      session[:current_user] = @user.id
       session[:session_start_time] = Time.now
       flash[:success_notice] = flash_message
     end
