@@ -55,6 +55,7 @@ private
 
     def logout
       session[:current_user] = nil
+      session.clear
       @redirect_url ||= routes.root_path
       redirect_to @redirect_url
     end

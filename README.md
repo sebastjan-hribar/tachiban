@@ -221,12 +221,15 @@ authorized?(controller, role, action)
 
 ### Changelog
 
-#### 0.5.1
+#### 0.6.0
 
 Method: `Tachiban::login`
-
-Change:
+<br>Change:
 `session[:current_user]` is not set as the user object, but as the user object id.
+***
+Method: `Tachiban::logout`
+<br>Change:
+Added `session.clear` to remove any other values upon logout.
 
 
 ## Development
