@@ -231,6 +231,11 @@ Method: `Tachiban::logout`
 <br>Change:
 Added `session.clear` to remove any other values upon logout.
 
+#### 0.6.1
+
+Dependency change for **rake** to ">= 12.3.3".
+
+
 
 ## Development
 
