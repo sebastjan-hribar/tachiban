@@ -10,11 +10,7 @@ offers the following functionalities (with methods listed below
 - Authentication
 - Session handling
 - Password reset
-- Authorization
-
-The Tachiban logic (apart from the Authorization) and code were extracted from a Hanami based web app using
-Hanami::Model and was also used in a Camping based web app using Active Record.
-
+- Authorization has been moved to[Rokku](https://github.com/sebastjan-hribar/rokku) 
 
 ## Installation
 
@@ -189,37 +185,18 @@ password_reset_url_valid?(link_validity)
 ```
 
 
-#### Authorization
-Authorization support was setup as inspired by [this blog post](http://billpatrianakos.me/blog/2013/10/22/authorize-users-based-on-roles-and-permissions-without-a-gem/).
-
-Authorization features support the generation of policy files for each controller where authorized roles are specified for each action.
-
-```ruby
-tachiban -n mightyPoster -p post
-```
-The above CLI command will generate a policy file for the application mightyPoster (not the project) and the controller post. The file will be generated as `myProject/lib/mightyPoster/policies/PostPolicy.rb`
-
-Each application would have its own `app/policies` folders.
-
-**The command must be run in the project root folder.**
-
-Once the file is generated the authorized roles variables in the initialize block for required actions need to be uncommneted and supplied with specific roles.
-
-Then we can check if a user is authorized:
-
-```ruby
-authorized?(controller, role, action)
-```
-
-
 ### ToDo
 
-- Add support for level based authorizations. [x]
 - Add generators for adding authorization rules to existing policies.
 - Add generators for entities with required attributes.
 
 
 ### Changelog
+
+#### 0.6.1
+
+Dependency change for **rake** to ">= 12.3.3".
+
 
 #### 0.6.0
 
@@ -230,10 +207,6 @@ Method: `Tachiban::login`
 Method: `Tachiban::logout`
 <br>Change:
 Added `session.clear` to remove any other values upon logout.
-
-#### 0.6.1
-
-Dependency change for **rake** to ">= 12.3.3".
 
 
 
