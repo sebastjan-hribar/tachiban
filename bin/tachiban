@@ -1,2 +1,1 @@
 #!/usr/bin/env ruby
-require_relative "../lib/tachiban/commands/commands.rb"
