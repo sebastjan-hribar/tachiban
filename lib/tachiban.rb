@@ -42,7 +42,11 @@ private
     def login(flash_message)
       session[:current_user] = @user.id
       session[:session_start_time] = Time.now
-      flash[:success_notice] = flash_message
+      if flash_message == nil?
+        flash[:success_notice] = 'You have been successfully logged in.'
+      else
+        flash[:success_notice] = flash_message
+      end
     end
 
   # The logout method sets the current user in the session to nil
@@ -63,7 +67,7 @@ private
   # the logout method takes over.
 
     def check_for_logged_in_user
-        logout unless session[:current_user]
+      logout unless session[:current_user]
     end
 
   # ### Session handling ###
@@ -126,17 +130,6 @@ private
     # State the link_validity in seconds.
     def password_reset_url_valid?(link_validity)
       Time.now > @user.password_reset_sent_at + link_validity
-    end
-
-  # ### Authorization ###
-  # The authorized? method checks if the specified user has the required role
-  # and permission to access the action. It returns true or false and
-  # provides the basis for further actions in either case.
-  #
-  # Example: redirect_to "/" unless authorized?
-
-    def authorized?(controller, role, action)
-      Object.const_get(controller.downcase.capitalize + "Policy").new(role).send("#{action.downcase}?")
     end
 
   end
