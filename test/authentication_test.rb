@@ -13,8 +13,8 @@ describe "Login" do
 
     it "successful authentication" do
       assert @action.send(:authenticated?, "123") == true, "User is authenticated."
-      # A custom success message is passed in in the login call in setup so the default message is not used.
-      value(@action.session[:__flash][:success_notice]).wont_equal "You have been successfully logged in."
+      flash = @action.exposures[:flash][:success_notice]
+      value(flash).must_equal "You have been successfully logged in."
     end
 
     it "unsuccessful authentication" do

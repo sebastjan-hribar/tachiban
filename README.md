@@ -44,22 +44,16 @@ end
 Prior to logging in or authenticating the user, retrieve the entity from the
 database and assign it to the instance variable of `@user`.
 
-The password reset methods require the user entity to have the following attributes:
-**token** and **password_reset_sent_at (set as `Time.now`)**. The token can be used to compose
- the password reset url and to later retrieve the correct user from
-the database when the user visits the password reset url.
+In addition to that, the user entity must have the following attributes:
 
-The **password_reset_sent_at** can be used to check the reset link validity.
-
-The only prerequisite for the authorization is the attribute of **role** for the user entity.
+* **token** (used to compose the password reset url and get the user from the database)
+* **password_reset_sent_at** (set as `Time.now` to check the reset link validity)
+* **hashed_pass** (to hold the generated hashed password)
 
 
 ### Usage
 
 #### Signup
-The entity for which authentication is used must have the
-attribute `hashed_pass` to hold the generated hashed password.
-
 To create a user with a hashed password use the `hashed_password(password)`
 method for the password and store it as the user's attribute `hashed_pass`.
 
@@ -77,14 +71,14 @@ def call(params)
 end
 ```
 
-#### Login
+#### Authentication and login
 To authenticate a user use the `authenticated?(input_password)` method and log
 them in with the `login` method. Authentication is successful if the user exists and passwords match.
 
-The user is logged in by setting the user object as the `session[:current_user]`.
+The user is logged in by setting the user object ID as the `session[:current_user]`.
 After the user is logged in the session start time is defined as
-`session[:session_start_time] = Time.now`. A flash message is also
-assigned as `flash[:success_notice] = flash_message`.
+`session[:session_start_time] = Time.now`. A default flash message is also
+assigned as 'You have been successfully logged in.'.
 
 The `session[:session_start_time]` is then used by the `session_expired?`
 method to determine whether the session has expired or not.
@@ -97,11 +91,9 @@ email = params[:entity_session][:email]
 password = params[:entity_session][:password]
 
 @user = EntityRepository.new.find_by_email(email)
-login("You have been successfully logged in.") if authenticated?(password)
+login if authenticated?(password)
 ```
 
-
-#### Authentication
 To check whether the user is logged in use the `check_for_logged_in_user` method.
 If the user is not logged in the `logout` method takes over.
 
@@ -112,10 +104,10 @@ expired and then restarts the session start time if the session
 is still valid or proceeds with the following if the session
 has expired:
 
-- setting the `session[:current_user]` to `nil`
-- a flash message is set: `flash[:failed_notice] = "Your session has expired"`
+- setting the `session[:current_user]` to `nil`,
+- a flash message is set: `flash[:failed_notice] = "Your session has expired"`,
 - redirects to the `routes.root_path` which can be overwritten by assigning
-a different url to @redirect_url
+a different url to @redirect_url.
 
 
 The `session_expired?` method compares the session start time
@@ -128,7 +120,7 @@ by default, but can be overwritten) with the current time.
     if session_expired?
       @redirect_url ||= routes.root_path
       session[:current_user] = nil
-      flash[:failed_notice] = "Your session has expired"
+      flash[:failed_notice] = "Your session has expired."
       redirect_to @redirect_url
     else
       restart_session_counter
@@ -187,11 +179,19 @@ password_reset_url_valid?(link_validity)
 
 ### ToDo
 
-- Add generators for adding authorization rules to existing policies.
-- Add generators for entities with required attributes.
-
+- Add full Hanami app for testing purposes.
 
 ### Changelog
+
+#### 0.7.0
+
+Authorization was moved to a separate gem [Rokku](https://github.com/sebastjan-hribar/rokku).
+Readme update.
+
+Method: `Tachiban::login`
+<br>Change:
+* Default flash message and redirect url provided.
+
 
 #### 0.6.1
 
