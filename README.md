@@ -10,7 +10,7 @@ offers the following functionalities (with methods listed below
 - Authentication
 - Session handling
 - Password reset
-- Authorization has been moved to[Rokku](https://github.com/sebastjan-hribar/rokku) 
+- Authorization has been moved to [Rokku](https://github.com/sebastjan-hribar/rokku) 
 
 ## Installation
 
@@ -190,7 +190,7 @@ Readme update.
 
 Method: `Tachiban::login`
 <br>Change:
-* Default flash message and redirect url provided.
+Default flash message and redirect url provided.
 
 
 #### 0.6.1
