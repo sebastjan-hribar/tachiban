@@ -5,7 +5,6 @@ require 'hanami/action/session'
 
 module Hanami
   module Tachiban
-
 private
 
   # ### Signup ###
@@ -19,7 +18,6 @@ private
       BCrypt::Password.create(password)
     end
 
-
   # ### Login ###
 
   # The authenticated? method returns true if the the following criteria
@@ -31,7 +29,6 @@ private
       @user && BCrypt::Password.new(@user.hashed_pass) == input_pass
     end
 
-
   # The login method can be used in combination with the authenticated? method to
   # log the user in if the authenticated? method returns true. The user is
   # logged in by setting the user object id as the session[:current_user].
@@ -39,27 +36,33 @@ private
   # by the session_expired? method to determine whether the session has
   # expired or not.
 
+  # There are two defualt values set: one for flash message and
+  # the other for redirect url. Both can be overwritten by assigning
+  # new values for @flash_message and @login_redirect_url.
+
   # Example:
   # login if authenticated?(input_pass)
 
-    def login(flash_message)
+    def login
       session[:current_user] = @user.id
       session[:session_start_time] = Time.now
-      flash[:success_notice] = flash_message
+      @flash_message ||= 'You have been successfully logged in.'
+      flash[:success_notice] = @flash_message
+      @login_redirect_url ||= routes.root_path
+      redirect_to @login_redirect_url
     end
 
-
   # The logout method sets the current user in the session to nil
-  # and performs a redirect to the @redirect_to which is set to
-  # routes.root_path and can be overwritten as needed with a specific url.
+  # and performs a redirect to the redirect_url which is set to
+  # /login, but can be overwritten as needed with a specific url
+  # by setting a new value for @logout_redirect_url.
 
     def logout
       session[:current_user] = nil
       session.clear
-      @redirect_url ||= routes.root_path
-      redirect_to @redirect_url
+      @logout_redirect_url ||= '/login'
+      redirect_to @logout_redirect_url
     end
-
 
   # ### Authentication ###
 
@@ -68,9 +71,8 @@ private
   # the logout method takes over.
 
     def check_for_logged_in_user
-        logout unless session[:current_user]
+      logout unless session[:current_user]
     end
-
 
   # ### Session handling ###
 
@@ -88,14 +90,12 @@ private
       end
     end
 
-
   # The restart_session_counter method resets the session start time to
   # Time.now. It's used in the handle  session method.
 
     def restart_session_counter
       session[:session_start_time] = Time.now
     end
-
 
     # The handle_session method is used to handle the incoming requests
     # based on the the session expiration. If the session has expired the
@@ -110,16 +110,14 @@ private
       if session_expired?
         @redirect_url ||= routes.root_path
         session[:current_user] = nil
-        flash[:failed_notice] = "Your session has expired"
+        flash[:failed_notice] = 'Your session has expired.'
         redirect_to @redirect_url
       else
         restart_session_counter
       end
     end
 
-
   # ### Password reset ###
-
     def token
       SecureRandom.urlsafe_base64
     end
@@ -137,20 +135,6 @@ private
     def password_reset_url_valid?(link_validity)
       Time.now > @user.password_reset_sent_at + link_validity
     end
-
-
-  # ### Authorization ###
-  # The authorized? method checks if the specified user has the required role
-  # and permission to access the action. It returns true or false and
-  # provides the basis for further actions in either case.
-  #
-  # Example: redirect_to "/" unless authorized?
-
-    def authorized?(controller, role, action)
-      Object.const_get(controller.downcase.capitalize + "Policy").new(role).send("#{action.downcase}?")
-    end
-
-
   end
 end
 

@@ -12,9 +12,8 @@ class Login
   include Hanami::Action
   include Hanami::Action::Session
 
-
   def call(params)
     @user = params.env[:user]
-    login("You were successfully logged in.")
+    login
   end
 end
