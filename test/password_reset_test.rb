@@ -22,15 +22,15 @@ describe 'Hanami::Tachiban' do
       The url will be valid for 2 hour(s).")
     end
 
-    it "checks the validity of the password reset url" do
+    it "asserts that password update url is not valid" do
       Timecop.travel(Time.now + 7400) do
-        assert_equal true, password_reset_url_valid?(7200)
+        assert_equal false, password_reset_url_valid?(7200)
       end
     end
 
-    it "checks that password reset url is not valid" do
-      Timecop.travel(Time.now + 700) do
-        assert_equal false, password_reset_url_valid?(7200)
+    it "asserts that password reset url is valid" do
+      Timecop.travel(Time.now + 7400) do
+        assert_equal true, password_reset_url_valid?(7600)
       end
     end
   end

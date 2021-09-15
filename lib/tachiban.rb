@@ -133,7 +133,7 @@ private
 
     # State the link_validity in seconds.
     def password_reset_url_valid?(link_validity)
-      Time.now > @user.password_reset_sent_at + link_validity
+      Time.now < @user.password_reset_sent_at + link_validity
     end
   end
 end

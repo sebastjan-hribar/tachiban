@@ -176,12 +176,17 @@ by the link validity: `Time.now > @user.password_reset_sent_at + link_validity`
 password_reset_url_valid?(link_validity)
 ```
 
+### Example of use in an application
+[Using Tachiban with a Hanami app](https://sebastjan-hribar.github.io/programming/2021/09/03/tachiban-with-hanami.html)
 
-### ToDo
-
-- Add full Hanami app for testing purposes.
 
 ### Changelog
+
+#### 0.8.0
+
+Bug fix for determining the validity of the password update linke. Greater than instead of less than was used
+to compare the time of the reset link email and the time when the user tries to update the password.
+
 
 #### 0.7.0
 
