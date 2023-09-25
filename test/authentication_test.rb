@@ -7,18 +7,18 @@ describe "Login" do
 
   describe "with user" do
     before do
-      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123", "argon2"))
       @action.call({ user: user })
     end
 
     it "successful authentication" do
-      assert @action.send(:authenticated?, "123") == true, "User is authenticated."
+      assert @action.send(:authenticated?, "123", "bcrypt") == true, "User is authenticated."
       flash = @action.exposures[:flash][:success_notice]
       value(flash).must_equal "You have been successfully logged in."
     end
 
     it "unsuccessful authentication" do
-      assert @action.send(:authenticated?, "1231") == false, "User is not authenticated"
+      assert @action.send(:authenticated?, "1231", "bcrypt") == false, "User is not authenticated"
     end
 
     it "saves the user to the session" do
@@ -37,7 +37,7 @@ end
 
 describe "Session validity" do
   before do
-      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123", "argon2"))
       @action = Login.new
       @action.call({ user: @user })
     end

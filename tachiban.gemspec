@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'hanami-router', "~> 1.0"
   spec.add_development_dependency 'pry', "~> 0"
 
+  spec.add_runtime_dependency "argon2", "~> 2.3"
   spec.add_runtime_dependency "bcrypt", "~> 3.1"
   spec.add_runtime_dependency 'hanami-controller', "~> 1.0"
   spec.add_runtime_dependency 'hanami-router', "~> 1.0"
