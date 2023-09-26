@@ -45,6 +45,8 @@ private
 
     def authenticated?(input_pass)#, selected_hasher="argon2")
       #if selected_hasher == "bcrypt"
+      puts input_pass.class
+        puts @user.hashed_pass.class
       @user && BCrypt::Password.new(@user.hashed_pass) == input_pass
         puts "bcrypt 1"
       #elsif selected_hasher == "argon2"
