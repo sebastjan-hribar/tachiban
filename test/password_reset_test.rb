@@ -3,7 +3,7 @@ require 'test_helper'
 describe 'Hanami::Tachiban' do
   describe 'Password reset' do
     before do
-      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123", "argon2"), password_reset_sent_at: Time.now)
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"), password_reset_sent_at: Time.now)
     end
 
     it "generates token for password reset url" do
