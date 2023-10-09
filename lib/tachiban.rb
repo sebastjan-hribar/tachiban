@@ -12,28 +12,14 @@ private
   # ### Signup ###
 
   # The hashed_password method generates a hashed version of the user's
-  # password. There are two providers supported for password hashing:
-  # BCrypt and Argon2. Hashed password by default includes a salt and
-  # the default cost factors for both BCrypt as well as Argon.
-  # 
-  # Argon2 is the defualt provider and is selected if we don't specify
-  # anything when calling the method. In case we need BCrypt, we need
-  # to pass the second paramater as "bcrypt".
+  # password. Password hashing is provided by Argon2. Hashed password
+  # by default includes a salt and the default cost factorr.
   #
   # Hashed password should be stored in the database as an user's
   # attribute so it can be retrieved during the login process.
 
-    def hashed_password(password)#, selected_hasher="argon2")
-      #if selected_hasher == "bcrypt"
-        BCrypt::Password.create(password)
-        puts "bcrypt"
-      #elsif selected_hasher == "argon2"
-       # Argon2::Password.create(password)
-        #puts "argon2"
-      #else
-      #  Argon2::Password.create(password)
-      #  puts "argon2I"
-      #end
+    def hashed_password(password)
+      Argon2::Password.create(password)
     end
 
   # ### Login ###
@@ -43,19 +29,8 @@ private
   # - a user exists
   # - a user's hashed password from the database matches the input password
 
-    def authenticated?(input_pass)#, selected_hasher="argon2")
-      #if selected_hasher == "bcrypt"
-      puts input_pass.class
-        puts @user.hashed_pass.class
-      @user && BCrypt::Password.new(@user.hashed_pass) == input_pass
-        puts "bcrypt 1"
-      #elsif selected_hasher == "argon2"
-      #@user && Argon2::Password.verify_password(input_pass, @user.hashed_pass)
-      #  puts "argon2 1"
-      #else
-      #@user && Argon2::Password.verfiy_password(input_pass, @user.hashed_pass)
-      #  puts "argon2I 1"
-      #end
+    def authenticated?(input_pass)
+      @user && Argon2::Password.verify_password(input_pass, @user.hashed_pass)
     end
 
   # The login method can be used in combination with the authenticated? method to

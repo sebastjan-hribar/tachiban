@@ -7,7 +7,7 @@ describe "Login" do
 
   describe "with user" do
     before do
-      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))#, "argon2"))
+      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
       @action.call({ user: user })
     end
 
@@ -37,7 +37,7 @@ end
 
 describe "Session validity" do
   before do
-      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))#, "argon2"))
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
       @action = Login.new
       @action.call({ user: @user })
     end
