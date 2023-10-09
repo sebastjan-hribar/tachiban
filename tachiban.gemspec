@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Sebastjan Hribar"]
   spec.email         = ["sebastjan.hribar@gmail.com"]
 
-  spec.summary       = %q{Tachiban provides simple password hashing for user authentication with bcrypt for Hanami web applications.}
+  spec.summary       = %q{Tachiban provides simple password hashing for user authentication with Argon2 for Hanami web applications.}
   spec.homepage      = "https://github.com/sebastjan-hribar/tachiban"
   spec.license       = "MIT"
 

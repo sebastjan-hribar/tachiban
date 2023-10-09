@@ -1,5 +1,4 @@
 require 'tachiban/version'
-require 'bcrypt'
 require 'hanami/controller'
 require 'hanami/action/session'
 require 'argon2'
