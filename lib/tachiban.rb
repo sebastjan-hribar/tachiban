@@ -1,21 +1,24 @@
 require 'tachiban/version'
-require 'bcrypt'
 require 'hanami/controller'
 require 'hanami/action/session'
+require 'argon2'
 
 module Hanami
   module Tachiban
 private
 
+
   # ### Signup ###
 
   # The hashed_password method generates a hashed version of the user's
-  # password. By default it includes a salt and the default cost factor
-  # of 10 provided by BCrypt. Hashed password should be stored in the database
-  # as a user's attribute so it can be retrieved during the login process.
+  # password. Password hashing is provided by Argon2. Hashed password
+  # by default includes a salt and the default cost factorr.
+  #
+  # Hashed password should be stored in the database as an user's
+  # attribute so it can be retrieved during the login process.
 
     def hashed_password(password)
-      BCrypt::Password.create(password)
+      Argon2::Password.create(password)
     end
 
   # ### Login ###
@@ -26,7 +29,7 @@ private
   # - a user's hashed password from the database matches the input password
 
     def authenticated?(input_pass)
-      @user && BCrypt::Password.new(@user.hashed_pass) == input_pass
+      @user && Argon2::Password.verify_password(input_pass, @user.hashed_pass)
     end
 
   # The login method can be used in combination with the authenticated? method to
