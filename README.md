@@ -1,6 +1,6 @@
 # Tachiban
 
-[![Join the chat at https://gitter.im/sebastjan-hribar/tachiban](https://badges.gitter.im/sebastjan-hribar/tachiban.svg)](https://gitter.im/sebastjan-hribar/tachiban?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gem Version](https://badge.fury.io/rb/tachiban.svg)](https://badge.fury.io/rb/tachiban) [![Build Status](https://travis-ci.org/sebastjan-hribar/tachiban.svg?branch=master)](https://travis-ci.org/sebastjan-hribar/tachiban)
+[![Join the chat at https://gitter.im/sebastjan-hribar/tachiban](https://badges.gitter.im/sebastjan-hribar/tachiban.svg)](https://gitter.im/sebastjan-hribar/tachiban?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gem Version](https://badge.fury.io/rb/tachiban.svg)](https://badge.fury.io/rb/tachiban)
 
 Tachiban (立ち番 - standing watch) provides simple authentication system for [Hanami web applications](http://hanamirb.org/) by using Argon2 for password hashing and
 offers the following functionalities (with methods listed below
