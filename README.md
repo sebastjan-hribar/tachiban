@@ -12,7 +12,7 @@ offers the following functionalities (with methods listed below
 - Password reset
 - Authorization has been moved to [Rokku](https://github.com/sebastjan-hribar/rokku) 
 
-**Note:** For Hanami 1.3 support, see the [1.x branch](https://github.com/sebastjan-hribar/tachiban/tree/1.x) or install Tachiban 1.0.
+**Note:** For Hanami 1.3 support, see the [1.0.0 branch](https://github.com/sebastjan-hribar/tachiban/tree/1.0.0) or install Tachiban 1.0.
 
 
 ## Installation
@@ -94,12 +94,15 @@ method to determine whether the session has expired or not.
 email = request.params[:entity_session][:email]
 password = request.params[:entity_session][:password]
 
-@user = user_repo.find_by_email(email)
+@user = user_repo.find_by_email(email) #required by login
 login(request, response) if authenticated?(password)
 ```
 
 To check whether the user is logged in use the `check_for_logged_in_user(request, response)` method.
 If the user is not logged in the `logout(request, response)` method takes over.
+
+There are **two defualt values** set for the `login` method: one for flash message and the other for redirect url.
+Both can be overwritten by assigning new values for `@flash_message` and `@login_redirect_url`.
 
 
 #### Session handling
@@ -120,11 +123,11 @@ by default, but can be overwritten) with the current time.
 `handle_session(request, response)` method:
 ```ruby
   def handle_session(request, response)
-    if session_expired?(request, response)
+    if session_expired?(request)
       @redirect_url ||= '/'
       request.session[:current_user] = nil
       response.flash[:failed_notice] = "Your session has expired."
-      redirect_to @redirect_url
+      response.redirect_to @redirect_url
     else
       restart_session_counter(request)
     end
@@ -179,12 +182,31 @@ by the link validity: `Time.now > @user.password_reset_sent_at + link_validity`
 password_reset_url_valid?(link_validity)
 ```
 
+#### Default values
+There are a few default values set which can be overwritten. See the table below.
+
+|Required by method                 |Variable            |Default value                          |
+|---                                |---                 |---                                    |
+|login(request, response)           |@flash_message      |'You have been successfully logged in.'|
+|login(request, response)           |@login_redirect_url |'/'                                    |
+|logout(request, response)          |@logout_redirect_url|'/login'                               |
+|session_expired?(request)          |@validity_time      |600                                    |
+|handle_session(request, response)  |@redirect_url       |'/'                                    |
+
+
+
 
 ### Changelog
 
 #### 2.0.0
 
-Supports Hanami ~> 2.0 applications.
+**Breaking Changes:**
+- Supports Hanami ~> 2.0 applications only.
+- Method signatures updated: `login`, `logout`, `check_for_logged_in_user`, and `handle_session` now require `(request, response)` parameters.
+- Methods `session_expired?` and `restart_session_counter` now require `(request)` parameter.
+- Tachiban must be explicitly included in the base action: `include Hanami::Tachiban`.
+
+For Hanami 1.3 support, use Tachiban 1.0.
 
 #### 1.0.0
 
