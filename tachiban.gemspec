@@ -17,16 +17,13 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_development_dependency "rake", "~> 12.3", ">= 12.3.3"
+  spec.add_development_dependency "rake"
   spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "hanami-model", "~> 1.0"
-  spec.add_development_dependency "timecop", "0.8.1"
-  spec.add_development_dependency 'hanami-controller', "~> 1.0"
-  spec.add_development_dependency 'hanami-router', "~> 1.0"
-  spec.add_development_dependency 'pry', "~> 0"
+  spec.add_development_dependency "timecop", "0.9.0"
+  spec.add_development_dependency 'hanami', "~> 2.0"
+  spec.add_development_dependency 'pry', "~> 0.16.0"
 
   spec.add_runtime_dependency "argon2", "~> 2.3"
-  spec.add_runtime_dependency 'hanami-controller', "~> 1.0"
-  spec.add_runtime_dependency 'hanami-router', "~> 1.0"
+  spec.add_runtime_dependency 'hanami', "~> 2.0"
+  spec.add_runtime_dependency "hanami-controller", "~> 2.0"
 end

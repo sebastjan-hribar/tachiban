@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/sebastjan-hribar/tachiban](https://badges.gitter.im/sebastjan-hribar/tachiban.svg)](https://gitter.im/sebastjan-hribar/tachiban?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gem Version](https://badge.fury.io/rb/tachiban.svg?kill_cache=1)](https://badge.fury.io/rb/tachiban)
 
-Tachiban (立ち番 - standing watch) provides simple authentication system for [Hanami web applications](http://hanamirb.org/) by using Argon2 for password hashing and
+Tachiban (立ち番 - standing watch) provides simple authentication system for [Hanami 2.x web applications](http://hanamirb.org/) by using Argon2 for password hashing and
 offers the following functionalities (with methods listed below
   under Methods by features):
 - Signup
@@ -11,6 +11,9 @@ offers the following functionalities (with methods listed below
 - Session handling
 - Password reset
 - Authorization has been moved to [Rokku](https://github.com/sebastjan-hribar/rokku) 
+
+**Note:** For Hanami 1.3 support, see the [1.x branch](https://github.com/sebastjan-hribar/tachiban/tree/1.x) or install Tachiban 1.0.
+
 
 ## Installation
 
@@ -28,11 +31,13 @@ Or install it yourself as:
 
     $ gem install tachiban
 
-Tachiban is already setup to be included by your Hanami application:
 
-```ruby
-::Hanami::Controller.configure do
-  prepare do
+Tachiban 2.0 needs to be included in the action:
+
+```
+# app/action.rb
+module MyApp
+  class Action < Hanami::Action
     include Hanami::Tachiban
   end
 end
@@ -61,41 +66,40 @@ method for the password and store it as the user's attribute `hashed_pass`.
 
 ```ruby
 # Create action for an entity
-def call(params)
-  password = params[:newuser][:password]
+def handle(request, response)
+  password = request.params[:newuser][:password]
   hashed_pass = hashed_password(password)
-  repository = UserRepository.new
 
-  @user = repository.create(name: name, surname: surname, email: email,
-  hashed_pass: hashed_pass))
+  user = user_repo.create(name: name, surname: surname, email: email,
+  hashed_pass: hashed_pass)
 end
 ```
 
 #### Authentication and login
 To authenticate a user use the `authenticated?(input_password)` method and log
-them in with the `login` method. Authentication is successful if the user exists and passwords match.
+them in with the `login(request, response)` method. Authentication is successful if the user exists and passwords match.
 
-The user is logged in by setting the user object ID as the `session[:current_user]`.
+The user is logged in by setting the user object ID as the `request.session[:current_user]`.
 After the user is logged in the session start time is defined as
-`session[:session_start_time] = Time.now`. A default flash message is also
+`request.session[:session_start_time] = Time.now`. A default flash message is also
 assigned as 'You have been successfully logged in.'.
 
-The `session[:session_start_time]` is then used by the `session_expired?`
+The `request.session[:session_start_time]` is then used by the `session_expired?(request, response)`
 method to determine whether the session has expired or not.
 
 *Example of session creation for an entity*
 
 ```ruby
 # Create action for an entity session
-email = params[:entity_session][:email]
-password = params[:entity_session][:password]
+email = request.params[:entity_session][:email]
+password = request.params[:entity_session][:password]
 
-@user = EntityRepository.new.find_by_email(email)
-login if authenticated?(password)
+@user = user_repo.find_by_email(email)
+login(request, response) if authenticated?(password)
 ```
 
-To check whether the user is logged in use the `check_for_logged_in_user` method.
-If the user is not logged in the `logout` method takes over.
+To check whether the user is logged in use the `check_for_logged_in_user(request, response)` method.
+If the user is not logged in the `logout(request, response)` method takes over.
 
 
 #### Session handling
@@ -104,26 +108,25 @@ expired and then restarts the session start time if the session
 is still valid or proceeds with the following if the session
 has expired:
 
-- setting the `session[:current_user]` to `nil`,
-- a flash message is set: `flash[:failed_notice] = "Your session has expired"`,
-- redirects to the `routes.root_path` which can be overwritten by assigning
-a different url to @redirect_url.
+- setting the `request.session[:current_user]` to `nil`,
+- a flash message is set: `response.flash[:failed_notice] = "Your session has expired"`,
+- redirects to the root path `/` which can be overwritten by assigning a different url to @redirect_url.
 
 
-The `session_expired?` method compares the session start time
+The `session_expired?(request, response)` method compares the session start time
 increased for the defined `@validity_time` (set to 10 minutes
 by default, but can be overwritten) with the current time.
 
-`handle_session` method:
+`handle_session(request, response)` method:
 ```ruby
-  def handle_session
-    if session_expired?
-      @redirect_url ||= routes.root_path
-      session[:current_user] = nil
-      flash[:failed_notice] = "Your session has expired."
+  def handle_session(request, response)
+    if session_expired?(request, response)
+      @redirect_url ||= '/'
+      request.session[:current_user] = nil
+      response.flash[:failed_notice] = "Your session has expired."
       redirect_to @redirect_url
     else
-      restart_session_counter
+      restart_session_counter(request)
     end
   end
 ```
@@ -176,11 +179,12 @@ by the link validity: `Time.now > @user.password_reset_sent_at + link_validity`
 password_reset_url_valid?(link_validity)
 ```
 
-### Example of use in an application
-[Using Tachiban with a Hanami app](https://sebastjan-hribar.github.io/programming/2021/09/03/tachiban-with-hanami.html)
-
 
 ### Changelog
+
+#### 2.0.0
+
+Supports Hanami ~> 2.0 applications.
 
 #### 1.0.0
 

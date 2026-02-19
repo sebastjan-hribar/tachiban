@@ -1,19 +1,44 @@
-class User < Hanami::Entity
-  attributes do
-    attribute :id,                      Types::Int
-    attribute :name,                    Types::String
-    attribute :hashed_pass,             Types::String
-    attribute :password_reset_sent_at,  Types::Time
-    attribute :role,                    Types::String
+class User
+  attr_accessor :id, :name, :hashed_pass, :password_reset_sent_at, :role
+  
+  def initialize(attributes = {})
+    @id = attributes[:id]
+    @name = attributes[:name]
+    @hashed_pass = attributes[:hashed_pass]
+    @password_reset_sent_at = attributes[:password_reset_sent_at]
+    @roles = attributes[:roles]
   end
 end
 
-class Login
-  include Hanami::Action
-  include Hanami::Action::Session
+class TestRequest
+  attr_accessor :params, :session
 
-  def call(params)
-    @user = params.env[:user]
-    login
+  def initialize
+    @params = {}
+    @session = {}
+  end
+end
+
+class TestResponse
+  attr_accessor :flash, :redirect_url
+
+  def initialize
+    @flash = {}
+    @redirect_url = nil
+  end
+
+  def redirect_to(url)
+    @redirect_url = url
+  end
+end
+
+class TestAction
+  include Hanami::Tachiban
+
+  attr_reader :request, :response
+
+  def initialize
+    @request = TestRequest.new
+    @response = TestResponse.new
   end
 end

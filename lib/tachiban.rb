@@ -46,13 +46,13 @@ private
   # Example:
   # login if authenticated?(input_pass)
 
-    def login
-      session[:current_user] = @user.id
-      session[:session_start_time] = Time.now
+    def login(request, response)
+      request.session[:current_user] = @user.id
+      request.session[:session_start_time] = Time.now
       @flash_message ||= 'You have been successfully logged in.'
-      flash[:success_notice] = @flash_message
-      @login_redirect_url ||= routes.root_path
-      redirect_to @login_redirect_url
+      response.flash[:success_notice] = @flash_message
+      @login_redirect_url ||= "/"
+      response.redirect_to @login_redirect_url
     end
 
   # The logout method sets the current user in the session to nil
@@ -60,11 +60,11 @@ private
   # /login, but can be overwritten as needed with a specific url
   # by setting a new value for @logout_redirect_url.
 
-    def logout
-      session[:current_user] = nil
-      session.clear
+    def logout(request, response)
+      request.session[:current_user] = nil
+      request.session.clear
       @logout_redirect_url ||= '/login'
-      redirect_to @logout_redirect_url
+      response.redirect_to @logout_redirect_url
     end
 
   # ### Authentication ###
@@ -73,8 +73,8 @@ private
   # request whether the user is logged in. If the user is not logged in
   # the logout method takes over.
 
-    def check_for_logged_in_user
-      logout unless session[:current_user]
+    def check_for_logged_in_user(request, response)
+      logout(request, response) unless request.session[:current_user]
     end
 
   # ### Session handling ###
@@ -86,18 +86,18 @@ private
   # increased for the defined validity time (set to 10 minutes
   # by default and can be overwritten) with the current time.
 
-    def session_expired?
-      if session[:current_user]
+    def session_expired?(request)
+      if request.session[:current_user]
         @validity_time ||= 600
-        session[:session_start_time] + @validity_time.to_i < Time.now
+        request.session[:session_start_time] + @validity_time.to_i < Time.now
       end
     end
 
   # The restart_session_counter method resets the session start time to
   # Time.now. It's used in the handle  session method.
 
-    def restart_session_counter
-      session[:session_start_time] = Time.now
+    def restart_session_counter(request)
+      request.session[:session_start_time] = Time.now
     end
 
     # The handle_session method is used to handle the incoming requests
@@ -109,14 +109,14 @@ private
     # If the session hasn't expired the restart_session_counter method is
     # called to reset the session start time.
 
-    def handle_session
-      if session_expired?
-        @redirect_url ||= routes.root_path
-        session[:current_user] = nil
-        flash[:failed_notice] = 'Your session has expired.'
-        redirect_to @redirect_url
+    def handle_session(request, response)
+      if session_expired?(request)
+        @redirect_url ||= "/"
+        request.session[:current_user] = nil
+        response.flash[:failed_notice] = 'Your session has expired.'
+        response.redirect_to @redirect_url
       else
-        restart_session_counter
+        restart_session_counter(request)
       end
     end
 
@@ -138,11 +138,5 @@ private
     def password_reset_url_valid?(link_validity)
       Time.now < @user.password_reset_sent_at + link_validity
     end
-  end
-end
-
-::Hanami::Controller.configure do
-  prepare do
-    include Hanami::Tachiban
   end
 end
