@@ -28,8 +28,8 @@ private
   # - a user exists
   # - a user's hashed password from the database matches the input password
 
-    def authenticated?(input_pass)
-      @user && Argon2::Password.verify_password(input_pass, @user.hashed_pass)
+    def authenticated?(input_pass, user)
+      user && Argon2::Password.verify_password(input_pass, user.hashed_pass)
     end
 
   # The login method can be used in combination with the authenticated? method to
@@ -46,8 +46,8 @@ private
   # Example:
   # login if authenticated?(input_pass)
 
-    def login(request, response)
-      request.session[:current_user] = @user.id
+    def login(request, response, user_id)
+      request.session[:current_user] = user_id
       request.session[:session_start_time] = Time.now
       @flash_message ||= 'You have been successfully logged in.'
       response.flash[:success_notice] = @flash_message

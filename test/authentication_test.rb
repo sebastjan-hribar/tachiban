@@ -7,30 +7,30 @@ describe "Login" do
 
   describe "with user" do
     before do
-      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
-      @action.instance_variable_set(:@user, user)
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+      #@action.instance_variable_set(:@user, user)
     end
 
     it "successful authentication" do
-      result = @action.send(:authenticated?, "123")
+      result = @action.send(:authenticated?, "123", @user)
       value(result).must_equal true
     end
 
     it "has a successful flash notice after successful login" do
-      @action.send(:authenticated?, "123")
-      @action.send(:login, @action.request, @action.response)
+      @action.send(:authenticated?, "123", @user)
+      @action.send(:login, @action.request, @action.response, @user.id)
 
       flash = @action.response.flash[:success_notice]
       value(flash).must_equal "You have been successfully logged in."
     end
 
     it "unsuccessful authentication" do
-      result = @action.send(:authenticated?, "1231")
+      result = @action.send(:authenticated?, "1231", @user)
       value(result).must_equal false
     end
 
     it "saves the user to the session" do
-      @action.send(:login, @action.request, @action.response)
+      @action.send(:login, @action.request, @action.response, @user.id)
       value(@action.request.session[:current_user]).must_equal 1
     end
   end
@@ -45,9 +45,9 @@ end
 describe "Session validity" do
   before do
       @action = TestAction.new
-      user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
-      @action.instance_variable_set(:@user, user)
-      @action.send(:login, @action.request, @action.response)
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+      #@action.instance_variable_set(:@user, user)
+      @action.send(:login, @action.request, @action.response, @user.id)
     end
 
   describe "with a valid new request" do
