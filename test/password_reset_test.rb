@@ -24,13 +24,13 @@ describe 'Hanami::Tachiban' do
 
     it "asserts that password update url is not valid" do
       Timecop.travel(Time.now + 7400) do
-        assert_equal false, password_reset_url_valid?(7200)
+        assert_equal false, password_reset_url_valid?(7200, @user)
       end
     end
 
     it "asserts that password reset url is valid" do
       Timecop.travel(Time.now + 7400) do
-        assert_equal true, password_reset_url_valid?(7600)
+        assert_equal true, password_reset_url_valid?(7600, @user)
       end
     end
   end

@@ -46,13 +46,13 @@ private
   # Example:
   # login if authenticated?(input_pass)
 
-    def login(request, response, user_id)
+    def login(request, response, user_id, flash_message: nil, login_redirect_url: nil)
       request.session[:current_user] = user_id
       request.session[:session_start_time] = Time.now
-      @flash_message ||= 'You have been successfully logged in.'
-      response.flash[:success_notice] = @flash_message
-      @login_redirect_url ||= "/"
-      response.redirect_to @login_redirect_url
+      flash_message ||= 'You have been successfully logged in.'
+      response.flash[:success_notice] = flash_message
+      login_redirect_url ||= "/"
+      response.redirect_to login_redirect_url
     end
 
   # The logout method sets the current user in the session to nil
@@ -60,11 +60,11 @@ private
   # /login, but can be overwritten as needed with a specific url
   # by setting a new value for @logout_redirect_url.
 
-    def logout(request, response)
+    def logout(request, response, logout_redirect_url = nil)
       request.session[:current_user] = nil
       request.session.clear
-      @logout_redirect_url ||= '/login'
-      response.redirect_to @logout_redirect_url
+      logout_redirect_url ||= '/login'
+      response.redirect_to logout_redirect_url
     end
 
   # ### Authentication ###
@@ -86,10 +86,10 @@ private
   # increased for the defined validity time (set to 10 minutes
   # by default and can be overwritten) with the current time.
 
-    def session_expired?(request)
+    def session_expired?(request, validity_time = nil)
       if request.session[:current_user]
-        @validity_time ||= 600
-        request.session[:session_start_time] + @validity_time.to_i < Time.now
+        validity_time ||= 600
+        request.session[:session_start_time] + validity_time.to_i < Time.now
       end
     end
 
@@ -109,12 +109,12 @@ private
     # If the session hasn't expired the restart_session_counter method is
     # called to reset the session start time.
 
-    def handle_session(request, response)
+    def handle_session(request, response, redirect_url)
       if session_expired?(request)
-        @redirect_url ||= "/"
+        redirect_url ||= "/"
         request.session[:current_user] = nil
         response.flash[:failed_notice] = 'Your session has expired.'
-        response.redirect_to @redirect_url
+        response.redirect_to redirect_url
       else
         restart_session_counter(request)
       end
@@ -135,8 +135,8 @@ private
     end
 
     # State the link_validity in seconds.
-    def password_reset_url_valid?(link_validity)
-      Time.now < @user.password_reset_sent_at + link_validity
+    def password_reset_url_valid?(link_validity, user)
+      Time.now < user.password_reset_sent_at + link_validity
     end
   end
 end
