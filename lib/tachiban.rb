@@ -109,7 +109,7 @@ private
     # If the session hasn't expired the restart_session_counter method is
     # called to reset the session start time.
 
-    def handle_session(request, response, redirect_url = nil)
+    def handle_session(request, response, redirect_url: nil)
       if session_expired?(request)
         redirect_url ||= "/"
         request.session[:current_user] = nil
