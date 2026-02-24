@@ -60,7 +60,7 @@ private
   # /login, but can be overwritten as needed with a specific url
   # by setting a new value for @logout_redirect_url.
 
-    def logout(request, response, logout_redirect_url = nil)
+    def logout(request, response, logout_redirect_url: nil)
       request.session[:current_user] = nil
       request.session.clear
       logout_redirect_url ||= '/login'
@@ -86,7 +86,7 @@ private
   # increased for the defined validity time (set to 10 minutes
   # by default and can be overwritten) with the current time.
 
-    def session_expired?(request, validity_time = nil)
+    def session_expired?(request, validity_time: nil)
       if request.session[:current_user]
         validity_time ||= 600
         request.session[:session_start_time] + validity_time.to_i < Time.now
@@ -109,7 +109,7 @@ private
     # If the session hasn't expired the restart_session_counter method is
     # called to reset the session start time.
 
-    def handle_session(request, response, redirect_url)
+    def handle_session(request, response, redirect_url: nil)
       if session_expired?(request)
         redirect_url ||= "/"
         request.session[:current_user] = nil
