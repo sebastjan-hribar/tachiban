@@ -41,7 +41,7 @@ private
 
   # There are two defualt values set: one for flash message and
   # the other for redirect url. Both can be overwritten by assigning
-  # new values for @flash_message and @login_redirect_url.
+  # new values for flash_message and login_redirect_url arguments.
 
   # Example:
   # login if authenticated?(input_pass)
@@ -58,7 +58,7 @@ private
   # The logout method sets the current user in the session to nil
   # and performs a redirect to the redirect_url which is set to
   # /login, but can be overwritten as needed with a specific url
-  # by setting a new value for @logout_redirect_url.
+  # by setting a new value for logout_redirect_url.
 
     def logout(request, response, logout_redirect_url: nil)
       request.session[:current_user] = nil
@@ -113,7 +113,7 @@ private
       if session_expired?(request)
         redirect_url ||= "/"
         request.session[:current_user] = nil
-        response.flash[:failed_notice] = 'Your session has expired.'
+        response.flash[:failed_notice] ||= 'Your session has expired.'
         response.redirect_to redirect_url
       else
         restart_session_counter(request)
