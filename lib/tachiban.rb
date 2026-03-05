@@ -182,10 +182,7 @@ private
       Time.now < user.password_reset_sent_at + link_validity
     end
 
-
-    private
-
-    def defualt_app_name
+    def default_app_name
       ENV.fetch("APP_NAME") { Hanami.app.namespace.to_s }
     rescue
       "Application"
