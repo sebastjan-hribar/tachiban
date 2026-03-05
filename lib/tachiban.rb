@@ -130,11 +130,6 @@ private
       "#{app_name} -- password reset request"
     end
 
-    #def email_body(url, token, link_validity, time_unit)
-    #  "Visit this url to reset your password: #{url}#{token}. \n
-    #  The url will be valid for #{link_validity} #{time_unit}(s)."
-    #end
-
     def email_body_text(reset_url:, user_name:, link_validity:, time_unit:, app_name: nil)
       app_name ||= default_app_name
     
@@ -142,6 +137,7 @@ private
         Hello #{user_name},
 
         Click the link below to reset your password:
+
         #{reset_url}
 
         This link will expire in #{link_validity} #{time_unit}(s).
@@ -170,7 +166,6 @@ private
               </p>
               <br>
               <p>Or copy this link: #{reset_url}</p>
-              <br>
               <p style="color: #666; font-size: 12px;">This link expires in #{link_validity} #{time_unit}(s).</p>
             </body>
           </html>
