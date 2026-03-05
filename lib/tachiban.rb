@@ -126,17 +126,70 @@ private
     end
 
     def email_subject(app_name)
+      app_name ||= default_app_name
       "#{app_name} -- password reset request"
     end
 
-    def email_body(url, token, link_validity, time_unit)
-      "Visit this url to reset your password: #{url}#{token}. \n
-      The url will be valid for #{link_validity} #{time_unit}(s)."
+    #def email_body(url, token, link_validity, time_unit)
+    #  "Visit this url to reset your password: #{url}#{token}. \n
+    #  The url will be valid for #{link_validity} #{time_unit}(s)."
+    #end
+
+    def email_body_text(reset_url:, user_name:, link_validity:, time_unit:, app_name: nil)
+      app_name ||= default_app_name
+    
+      <<~TEXT
+        Hello #{user_name},
+
+        Click the link below to reset your password:
+        #{reset_url}
+
+        This link will expire in #{link_validity} #{time_unit}(s).
+
+        Kind regards,
+        The #{app_name} Team
+      TEXT
+    end
+
+    def email_body_html(reset_url:, user_name:, link_validity:, time_unit:, app_name: nil)
+      app_name ||= default_app_name
+    
+      <<~HTML
+        <!DOCTYPE html>
+          <html>
+            <body style="font-family: Arial, sans-serif;">
+              <h2>Password reset request</h2>
+              <br>
+              <p>Hello #{user_name},</p>
+              <br>
+              <p>Click the button below to reset your password:</p>
+              <p>
+                <a href="#{reset_url}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+                  Reset Password
+                </a>
+              </p>
+              <br>
+              <p>Or copy this link: #{reset_url}</p>
+              <br>
+              <p style="color: #666; font-size: 12px;">This link expires in #{link_validity} #{time_unit}(s).</p>
+            </body>
+          </html>
+        HTML
     end
 
     # State the link_validity in seconds.
     def password_reset_url_valid?(link_validity, user)
       Time.now < user.password_reset_sent_at + link_validity
     end
+
+
+    private
+
+    def defualt_app_name
+      ENV.fetch("APP_NAME") { Hanami.app.namespace.to_s }
+    rescue
+      "Application"
+    end
+
   end
 end
