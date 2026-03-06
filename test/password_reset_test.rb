@@ -17,9 +17,12 @@ describe 'Hanami::Tachiban' do
     end
 
     it "provides a default basic password reset body text" do
-      body = email_body("http://localhost:2300/passwordupdate/", "asdasdasdaerwrw", 2, "hour")
-      value(body).must_equal("Visit this url to reset your password: http://localhost:2300/passwordupdate/asdasdasdaerwrw. \n
-      The url will be valid for 2 hour(s).")
+      #email_body_text(reset_url:, user_name:, link_validity:, time_unit:, app_name: nil)
+      body = email_body_text(reset_url: "http://localhost:2300/passwordupdate/", user_name: @user.name,
+                               link_validity: 2, time_unit: "hour", app_name: "The Great App")
+      assert body.include?("Click the link below to reset your password:")
+      assert body.include?("This link will expire in 2 hour(s).")
+      assert body.include?("Tester")
     end
 
     it "asserts that password update url is not valid" do
