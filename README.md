@@ -66,7 +66,7 @@ end
 
 ### 2.1 Prerequisites
 Prior to logging in or authenticating the user, retrieve the entity from the
-database and assign it to a variable (e.g. `user`), which you then pass it to
+database and assign it to a variable (e.g. `user`), which you then pass to
 the methods as required.
 
 In addition to that, the user entity must have the following attributes:
@@ -98,16 +98,15 @@ end
 #### 2.2.4 Authentication and login
 To authenticate a user use the `authenticated?(input_password, user)` method and log
 them in with the `login(request, response, user_id, flash_message: nil, login_redirect_url: nil)` method.
-Authentication is successful if the user exists and passwords match. You can provide your own flash message
-and / or redirect url. Otherwise, the **default values** will be used (see the table below).
+
+Authentication is successful if the user exists and passwords match. It's possible to provide your own flash message and / or redirect url. Otherwise, the **default values** will be used (see the table below).
 
 The user is logged in by setting the user object ID as the `request.session[:current_user]`.
 After the user is logged in, the session start time is defined as
 `request.session[:session_start_time] = Time.now`. A default flash message is also
 assigned as 'You have been successfully logged in.'.
 
-The `request.session[:session_start_time]` is then used by the `session_expired?(request, response)`
-method to determine whether the session has expired or not.
+The `request.session[:session_start_time]` is then used by the `session_expired?(request, response)` method to determine whether the session has expired or not.
 
 **_Example of session creation for an entity_**
 
@@ -120,8 +119,7 @@ user = user_repo.find_by_email(email) #required by login
 login(request, response, user.id) if authenticated?(password, user)
 ```
 
-To check whether the user is logged in, use the `check_for_logged_in_user(request, response)` method.
-If the user is not logged in, the `logout(request, response, logout_redirect_url: nil)` method takes over.
+To check whether a user is logged in, use the `check_for_logged_in_user(request, response)` method. If the user is not logged in, the `logout(request, response, logout_redirect_url: nil)` method takes over.
 
 
 #### 2.2.5 Session handling
@@ -132,7 +130,7 @@ has expired:
 
 - setting the `request.session[:current_user]` to `nil`,
 - a flash message is set: `response.flash[:failed_notice] = "Your session has expired"`,
-- redirects to the root path `/` which can be overwritten.
+- redirects to the root path `/`, which can be overwritten.
 
 
 The `session_expired?(request, validity_time: nil)` method compares the session start time
@@ -155,8 +153,8 @@ by default, but can be overwritten) with the current time.
 
 #### 2.2.6 Session handling in a share code module
 It is possible to enable session handling in a share code module as provided by Hanami.
-To do this, we can create an authentication module in **app/actions/authentication.rb**.
-The example below shows also how we can set custom values to replace default values in
+To do this, create an authentication module in **app/actions/authentication.rb**.
+The example below shows also how to custom values to replace default values in
 actions.
 
 ```ruby
@@ -232,34 +230,43 @@ def handle_session; end
 ```
 
 #### 2.2.7 Password reset
-The password reset feature provides a few simple methods to generate a
-token, email subject and body. It is also possible to specify and
-check the validity of the password reset url.
+The password reset feature provides a few simple methods to:
+* generate a token, email subject and body (text and html part)
+* specify and check the validity of the password reset url and
+* set the default application name for the email subject (it can be
+overwritten or set as a ENV variable).
+
+The link validity must me specified in seconds. The method compares the
+current time with the time when the password reset link was sent increased
+by the link validity: `Time.now > user.password_reset_sent_at + link_validity`.
+
 
 ```ruby
 token # => "YbRucc8YUlFJrYYp04eQKQ"
 ```
 
 ```ruby
-email_subject(SomeApp) # => "SomeApp -- password reset request"
+email_subject("SomeApp") # => "SomeApp -- password reset request"
 ```
-
-
-Provide the base url, the token and the number and type of the time units
- for the validity of the link.
-
-```ruby
-body = email_body(base_url, url_token, 2, "hour")
-# => "Visit this url to reset your password: http://localhost:2300/passwordupdate/asdasdasdaerwrw.
-#     The url will be valid for 2 hour(s).")
-```
-
-The link validity must me specified in seconds. The method compares the
-current time with the time when the password reset link was sent increased
-by the link validity: `Time.now > user.password_reset_sent_at + link_validity`
 
 ```ruby
 password_reset_url_valid?(link_validity)
+```
+
+
+
+Provide the following values when building the email body: reset url, user's name,
+link validity, time unit and optionally the application name. Below is an example of
+html_body in a mailer class:
+
+```ruby
+html_body = email_body_html(
+          reset_url: reset_url,
+          user_name: "#{user.name} #{user.surname}",
+          link_validity: 2,
+          time_unit: "hour",
+          app_name: nil
+          )
 ```
 
 ### 3. Default values

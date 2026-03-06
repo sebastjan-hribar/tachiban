@@ -121,6 +121,10 @@ private
     end
 
   # ### Password reset ###
+    # The password reset functionalities include token generation, email subject,
+    # email body in the text as well as in the html format, checking the reset link
+    # validity and getting the app name.
+
     def token
       SecureRandom.urlsafe_base64
     end
