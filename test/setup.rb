@@ -42,3 +42,15 @@ class TestAction
     @response = TestResponse.new
   end
 end
+
+class TestActionWithCustoms < TestAction
+  private
+
+  def custom_session_validity_time
+    100
+  end
+
+  def custom_handle_session_redirect_url
+    "/custom-login"
+  end
+end

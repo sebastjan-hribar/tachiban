@@ -19,11 +19,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "rake"
   spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "timecop", "0.9.0"
-  spec.add_development_dependency 'hanami', "~> 2.0"
+  spec.add_development_dependency "timecop", "~> 0.9.0"
   spec.add_development_dependency 'pry', "~> 0.16.0"
 
   spec.add_runtime_dependency "argon2", "~> 2.3"
-  spec.add_runtime_dependency 'hanami', "~> 2.0"
-  spec.add_runtime_dependency "hanami-controller", "~> 2.0"
 end

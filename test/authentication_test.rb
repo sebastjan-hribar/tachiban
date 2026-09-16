@@ -8,7 +8,6 @@ describe "Login" do
   describe "with user" do
     before do
       @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
-      #@action.instance_variable_set(:@user, user)
     end
 
     it "successful authentication" do
@@ -33,6 +32,19 @@ describe "Login" do
       @action.send(:login, @action.request, @action.response, @user.id)
       value(@action.request.session[:current_user]).must_equal 1
     end
+
+    it "returns false for a nil user" do
+      value(@action.send(:authenticated?, "123", nil)).must_equal false
+    end
+
+    it "returns false for a user with no stored hashed password" do
+      hashless_user = User.new(id: 2, name: "Tester", hashed_pass: nil)
+      value(@action.send(:authenticated?, "123", hashless_user)).must_equal false
+    end
+
+    it "returns false for a nil password" do
+      value(@action.send(:authenticated?, nil, @user)).must_equal false
+    end
   end
 
   describe "without user" do
@@ -46,25 +58,57 @@ describe "Session validity" do
   before do
       @action = TestAction.new
       @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
-      #@action.instance_variable_set(:@user, user)
       @action.send(:login, @action.request, @action.response, @user.id)
     end
 
   describe "with a valid new request" do
     it 'a new request comes in on time' do
-      Timecop.travel(Time.now + 200) do
-        @action.instance_variable_set(:@validity_time, 500)
-        value(@action.send(:session_expired?, @action.request)).must_equal false
+      Timecop.travel(Time.now + 800) do
+        value(@action.send(:session_expired?, @action.request, validity_time: 1000)).must_equal false
       end
     end
   end
 
   describe "with an invalid new request" do
     it 'a new request comes in too late' do
-      Timecop.travel(Time.now + 800) do
-        @action.instance_variable_set(:@validity_time, 5)
+      Timecop.travel(Time.now + 200) do
+        value(@action.send(:session_expired?, @action.request, validity_time: 100)).must_equal true
+      end
+    end
+  end
+
+  describe "custom method hooks" do
+    before do
+      @action = TestActionWithCustoms.new
+      @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+      @action.send(:login, @action.request, @action.response, @user.id)
+    end
+
+    it "uses the custom validity over the default" do
+      Timecop.travel(Time.now + 200) do
         value(@action.send(:session_expired?, @action.request)).must_equal true
       end
     end
+
+    it "uses the custom redirect url on expiry" do
+      Timecop.travel(Time.now + 200) do
+        @action.send(:handle_session, @action.request, @action.response)
+        value(@action.response.redirect_url).must_equal "/custom-login"
+      end
+    end
+  end
+end
+
+describe 'Logout' do
+  before do
+    @user = User.new(id: 1, name: "Tester", hashed_pass: hashed_password("123"))
+    @action = TestAction.new
+  end
+  
+  it "clears the session and redirects" do
+    @action.send(:login, @action.request, @action.response, @user.id)
+    @action.send(:logout, @action.request, @action.response)
+    value(@action.request.session[:current_user]).must_be_nil
+    value(@action.response.redirect_url).must_equal "/login"
   end
 end
